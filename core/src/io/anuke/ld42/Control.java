@@ -1,47 +1,39 @@
 package io.anuke.ld42;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import static io.anuke.ld42.Vars.*;
-
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Sort;
 import io.anuke.ld42.GameState.State;
+import io.anuke.ld42.entities.Enemy;
 import io.anuke.ld42.entities.Player;
+import io.anuke.ld42.entities.ShadowTrait;
 import io.anuke.ld42.io.MapLoader;
+import io.anuke.ucore.core.*;
 import io.anuke.ucore.core.Inputs.Axis;
-import io.anuke.ucore.entities.impl.SolidEntity;
+import io.anuke.ucore.entities.Entities;
+import io.anuke.ucore.entities.EntityPhysics;
 import io.anuke.ucore.entities.trait.DrawTrait;
 import io.anuke.ucore.entities.trait.Entity;
 import io.anuke.ucore.entities.trait.SolidTrait;
 import io.anuke.ucore.graphics.Draw;
-import io.anuke.ucore.graphics.Fill;
 import io.anuke.ucore.graphics.Lines;
+import io.anuke.ucore.graphics.Surface;
 import io.anuke.ucore.input.Input;
-import io.anuke.ucore.core.Inputs;
-import io.anuke.ucore.core.Core;
-import io.anuke.ucore.core.KeyBinds;
-import io.anuke.ucore.core.Settings;
-import io.anuke.ucore.entities.EntityPhysics;
-import io.anuke.ucore.entities.EntityDraw;
-import io.anuke.ucore.entities.Entities;
-import io.anuke.ucore.util.Atlas;
 import io.anuke.ucore.modules.RendererModule;
-import io.anuke.ucore.util.Log;
+import io.anuke.ucore.util.Atlas;
 import io.anuke.ucore.util.Mathf;
 import io.anuke.ucore.util.Tmp;
 
+import static io.anuke.ld42.Vars.*;
+
 public class Control extends RendererModule{
 	private Array<Entity>[] drawLine = new Array[0];
+	private Surface effects;
 
 	public TiledMap map;
 	public TiledMapTileLayer wallLayer;
@@ -55,22 +47,29 @@ public class Control extends RendererModule{
 		KeyBinds.defaults(
 			"move_x", new Axis(Input.A, Input.D),
 			"move_y", new Axis(Input.S, Input.W),
+			"shoot", Input.MOUSE_LEFT,
 			"pause", Input.ESCAPE
 		);
 		
 		Settings.loadAll("io.anuke.ld42");
 
 		EntityPhysics.initPhysics();
-		EntityPhysics.collisions().setCollider(tileSize, (x, y) -> wallLayer.getCell(x, y) != null && wallLayer.getCell(x, y).getTile().getProperties().containsKey("solid"),
-		(x, y, rect) -> {
-			rect.setSize(tileSize).setPosition(x*tileSize - tileSize/2f, y*tileSize);
-		});
+		EntityPhysics.collisions().setCollider(tileSize,
+		(x, y) -> wallLayer.getCell(x, y) != null && wallLayer.getCell(x, y).getTile().getProperties().containsKey("solid"),
+		(x, y, rect) -> rect.setSize(tileSize).setPosition(x*tileSize - tileSize/2f, y*tileSize));
+
+		effects = Graphics.createSurface();
 
 		pixelate();
 
 		player = new Player();
 		player.set(50, 50);
 		player.add();
+
+		Enemy enemy = new Enemy();
+		enemy.set(60, 60);
+		enemy.add();
+
 		loadMap("map");
 	}
 
@@ -96,6 +95,7 @@ public class Control extends RendererModule{
         }
 		
 		if(GameState.is(State.playing)){
+			Timers.update();
 			setCamera(player.x, player.y);
 			
 			if(Inputs.keyTap("pause")){
@@ -138,6 +138,17 @@ public class Control extends RendererModule{
 			}
 		}
 
+		//draw shadows
+		Graphics.surface(effects);
+		for(Entity entity : Entities.defaultGroup().all()){
+			if(!(entity instanceof ShadowTrait)) continue;
+			ShadowTrait sh = (ShadowTrait)entity;
+			Draw.rect("shadow" + sh.shadowSize(), entity.getX(), entity.getY() + 1);
+		}
+		Draw.color(0, 0, 0, 0.14f);
+		Graphics.flushSurface();
+		Draw.color();
+
 		//draw walls
 		for(int y = drawLine.length/2 - 1; y >= -drawLine.length/2; y --){
 			Array<Entity> line = drawLine[y + drawLine.length/2];
@@ -160,14 +171,7 @@ public class Control extends RendererModule{
 			drawLine[i].clear();
 		}
 
-		Draw.color(Color.GREEN);
-		for(Entity entity : Entities.all()){
-			if(!(entity instanceof SolidTrait)) continue;
-			SolidTrait solid = (SolidTrait)entity;
-			solid.getHitboxTile(Tmp.r1);
-			Lines.rect(Tmp.r1);
-		}
-		Draw.color();
+		drawDebug();
 	}
 
 	@Override
@@ -176,5 +180,20 @@ public class Control extends RendererModule{
 		for(int i = 0; i < drawLine.length; i++){
 			drawLine[i] = new Array<>();
 		}
+	}
+
+	void drawDebug(){
+
+		for(Entity entity : Entities.all()){
+			if(!(entity instanceof SolidTrait)) continue;
+			SolidTrait solid = (SolidTrait)entity;
+			solid.getHitboxTile(Tmp.r1);
+			Draw.color(Color.GREEN);
+			Lines.rect(Tmp.r1);
+			Draw.color(Color.RED);
+			solid.getHitbox(Tmp.r1);
+			Lines.rect(Tmp.r1);
+		}
+		Draw.color();
 	}
 }

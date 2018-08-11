@@ -1,18 +1,23 @@
 package io.anuke.ld42.entities;
 
-import com.badlogic.gdx.graphics.Color;
 import io.anuke.ucore.core.Inputs;
-import io.anuke.ucore.entities.impl.SolidEntity;
-import io.anuke.ucore.entities.trait.DrawTrait;
+import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.graphics.Draw;
+import io.anuke.ucore.util.Angles;
 import io.anuke.ucore.util.Translator;
 
-public class Player extends SolidEntity implements DrawTrait{
+public class Player extends Spark{
     private Translator movement = new Translator();
     private float speed = 3f;
 
     public Player(){
-        hitboxTile.set(0, 2, 4, 4);
+        hitboxTile.set(0, 3, 12, 6);
+        hitbox.set(0, 8, 16, 16);
+    }
+
+    @Override
+    public float maxHealth(){
+        return 5;
     }
 
     @Override
@@ -24,5 +29,11 @@ public class Player extends SolidEntity implements DrawTrait{
     public void update(){
         movement.set(Inputs.getAxis("move_x") * speed, Inputs.getAxis("move_y") * speed).limit(speed);
         move(movement.x, movement.y);
+
+        if(Inputs.keyDown("shoot") && Timers.get(this, "shoot", 10)){
+            Bullet bullet = new Bullet(BulletType.testType, this, Angles.mouseAngle(x, y));
+            bullet.set(x, y);
+            bullet.add();
+        }
     }
 }

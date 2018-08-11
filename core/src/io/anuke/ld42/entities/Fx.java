@@ -1,4 +1,4 @@
-package io.anuke.ld42;
+package io.anuke.ld42.entities;
 
 import com.badlogic.gdx.graphics.Color;
 
