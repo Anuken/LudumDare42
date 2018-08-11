@@ -52,6 +52,7 @@ public class Control extends RendererModule{
 		KeyBinds.defaults(
 			"move_x", new Axis(Input.A, Input.D),
 			"move_y", new Axis(Input.S, Input.W),
+			"dash", Input.SPACE, // dash key
 			"shoot", Input.MOUSE_LEFT,
 			"pause", Input.ESCAPE
 		);
