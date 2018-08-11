@@ -16,6 +16,12 @@ public class Fx{
 		Draw.reset();
 	}),
 
+	smoke = new Effect(50, e -> {
+		Draw.color(Color.MAROON, Color.BLACK, e.fin());
+		Fill.circle(e.x, e.y, 4 * e.fslope());
+		Draw.reset();
+	}),
+
 	hit = new Effect(10, e -> {
 		Lines.stroke(3f);
 		Draw.color(Color.WHITE, Color.ORANGE, e.fin());

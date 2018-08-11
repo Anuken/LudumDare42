@@ -21,5 +21,20 @@ public class BulletType extends BaseBulletType<Bullet>{
             Lines.poly(b.x, b.y, 3, 10);
             Draw.color();
         }
+    },
+
+    tenta = new BulletType(){
+        {
+            damage = 1;
+            speed = 3f;
+        }
+
+        @Override
+        public void draw(Bullet b){
+            Lines.stroke(3f);
+            Draw.color(Color.MAROON);
+            Lines.circle(b.x, b.y, 3);
+            Draw.reset();
+        }
     };
 }

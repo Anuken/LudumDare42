@@ -19,6 +19,12 @@ public abstract class Spark extends DestructibleEntity implements DrawTrait, Sha
         bullet.add();
     }
 
+    public void bullet(BulletType type, float x, float y, float angle){
+        Bullet bullet = new Bullet(type, this, angle);
+        bullet.set(x, y);
+        bullet.add();
+    }
+
     public abstract String name();
 
     @Override
