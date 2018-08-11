@@ -104,7 +104,6 @@ project(":core") {
             compile project(":GDXGifRecorder")
         }
 
-        compile project(":postprocessing")
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
     }

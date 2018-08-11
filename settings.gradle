@@ -1,7 +1,5 @@
 include 'core', 'desktop', 'html', 'core', 'desktop', 'html'
 if(System.properties["release"] == null || System.properties["release"].equals("false")){
-    include ':postprocessing'
-    project(':postprocessing').projectDir = new File(settingsDir, '../postprocessing')
 
     if (new File(settingsDir, '../uCore').exists()) {
         include ':uCore'

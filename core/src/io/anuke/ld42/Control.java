@@ -104,7 +104,7 @@ public class Control extends RendererModule{
 	
 	@Override
 	public void update(){
-		ui.dialog.display("Eikan", "eikan_default", "lorem ipsumeee text text text text sentence sentance sentience centennial");
+		ui.dialog.display("Aysa", "aysa_default", "lorem ipsumeee text text text text sentence sentance sentience centennial");
 		
 		//TODO remove
 		if(Inputs.keyDown(Input.ESCAPE)){
