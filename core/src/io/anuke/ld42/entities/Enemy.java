@@ -13,6 +13,11 @@ public class Enemy extends Spark{
     }
 
     @Override
+    public String name(){
+        return "not a spark really";
+    }
+
+    @Override
     public void update(){
         if(Mathf.chance(0.05)){
            bullet(BulletType.testType, angleTo(player));

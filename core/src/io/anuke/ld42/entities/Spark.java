@@ -3,8 +3,12 @@ package io.anuke.ld42.entities;
 import io.anuke.ld42.entities.traits.ShadowTrait;
 import io.anuke.ucore.entities.impl.DestructibleEntity;
 import io.anuke.ucore.entities.trait.DrawTrait;
+import io.anuke.ucore.graphics.Draw;
+import io.anuke.ucore.util.Translator;
 
 public abstract class Spark extends DestructibleEntity implements DrawTrait, ShadowTrait{
+    protected static Translator movement = new Translator();
+
     public float height = 12f;
     public boolean direction;
     public float walktime;
@@ -13,6 +17,14 @@ public abstract class Spark extends DestructibleEntity implements DrawTrait, Sha
         Bullet bullet = new Bullet(type, this, angle);
         bullet.set(x, y + height);
         bullet.add();
+    }
+
+    public abstract String name();
+
+    @Override
+    public void draw(){
+        Draw.grect(name() +
+        (walktime > 0 ? "-walk-" + ( (int)(walktime / 10f) % 2) : ""), x, y, !direction);
     }
 
     @Override

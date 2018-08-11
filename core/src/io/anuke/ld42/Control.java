@@ -9,7 +9,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Sort;
 import io.anuke.ld42.GameState.State;
-import io.anuke.ld42.entities.Enemy;
+import io.anuke.ld42.entities.Aysa;
 import io.anuke.ld42.entities.LayerEffect;
 import io.anuke.ld42.entities.Player;
 import io.anuke.ld42.entities.traits.LayerTrait;
@@ -31,10 +31,7 @@ import io.anuke.ucore.graphics.Lines;
 import io.anuke.ucore.graphics.Surface;
 import io.anuke.ucore.input.Input;
 import io.anuke.ucore.modules.RendererModule;
-import io.anuke.ucore.util.Atlas;
-import io.anuke.ucore.util.Mathf;
-import io.anuke.ucore.util.Pooling;
-import io.anuke.ucore.util.Tmp;
+import io.anuke.ucore.util.*;
 
 import static io.anuke.ld42.Vars.*;
 
@@ -83,10 +80,6 @@ public class Control extends RendererModule{
 		player = new Player();
 		player.add();
 
-		Enemy enemy = new Enemy();
-		enemy.set(60, 60);
-		enemy.add();
-
 		loadMap("map");
 	}
 
@@ -102,12 +95,16 @@ public class Control extends RendererModule{
 
 		player.set(floorLayer.getWidth() * tileSize / 2f, floorLayer.getHeight() * tileSize/2f);
 
+		Aysa aysa = new Aysa();
+		aysa.set(player.x, player.y + 4);
+		aysa.add();
+
 		EntityPhysics.initPhysics(0, 0, wallLayer.getWidth() * tileSize, wallLayer.getHeight() * tileSize);
 	}
 	
 	@Override
 	public void update(){
-		ui.dialog.display("Eikan", "test_", "lorem ipsumeee text text text text sentence sentance sentience centennial");
+		ui.dialog.display("Eikan", "eikan_default", "lorem ipsumeee text text text text sentence sentance sentience centennial");
 		
 		//TODO remove
 		if(Inputs.keyDown(Input.ESCAPE)){
@@ -131,6 +128,7 @@ public class Control extends RendererModule{
 		}
 
 		drawDefault();
+		record();
 	}
 	
 	@Override
@@ -194,7 +192,7 @@ public class Control extends RendererModule{
 		for(int y = drawLine.length/2 - 1; y >= -drawLine.length/2; y --){
 			Array<Entity> line = drawLine[y + drawLine.length/2];
 
-			Sort.instance().sort(line, (a, b) -> -Float.compare(a.getX(), b.getY()));
+			Sort.instance().sort(line, (a, b) -> -Float.compare(a.getY(), b.getY()));
 			for(Entity entity : line){
 				((DrawTrait)entity).draw();
 			}

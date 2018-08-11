@@ -2,12 +2,9 @@ package io.anuke.ld42.entities;
 
 import io.anuke.ucore.core.Inputs;
 import io.anuke.ucore.core.Timers;
-import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.util.Angles;
-import io.anuke.ucore.util.Translator;
 
 public class Player extends Spark{
-    private Translator movement = new Translator();
     private float speed = 3f;
 
     public Player(){
@@ -28,9 +25,8 @@ public class Player extends Spark{
     }
 
     @Override
-    public void draw(){
-        Draw.grect("char" +
-        (walktime > 0 ? "-walk-" + ( (int)(walktime / 10f) % 2) : ""), x, y, !direction);
+    public String name(){
+        return "char";
     }
 
     @Override
