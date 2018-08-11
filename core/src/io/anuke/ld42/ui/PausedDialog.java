@@ -1,4 +1,4 @@
-package io.anuke.ld42.dialogs;
+package io.anuke.ld42.ui;
 
 import io.anuke.ucore.scene.ui.Dialog;
 import io.anuke.ld42.GameState;

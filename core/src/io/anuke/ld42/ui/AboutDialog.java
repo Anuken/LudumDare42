@@ -1,17 +1,17 @@
-package io.anuke.ld42.dialogs;
+package io.anuke.ld42.ui;
 
 import io.anuke.ucore.scene.ui.Dialog;
 import static io.anuke.ld42.Vars.*;
 
-public class TutorialDialog extends Dialog{
+public class AboutDialog extends Dialog{
 
-    public TutorialDialog(){
-        super("Tutorial");
+    public AboutDialog(){
+        super("About");
 
         content().left();
         content().margin(10);
 
-        for(String s : tutorialText){
+        for(String s : aboutText){
             content().add(s);
             content().row();
         }

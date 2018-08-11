@@ -21,6 +21,7 @@ import io.anuke.ucore.entities.trait.DrawTrait;
 import io.anuke.ucore.entities.trait.Entity;
 import io.anuke.ucore.entities.trait.SolidTrait;
 import io.anuke.ucore.graphics.Draw;
+import io.anuke.ucore.graphics.Fill;
 import io.anuke.ucore.graphics.Lines;
 import io.anuke.ucore.graphics.Surface;
 import io.anuke.ucore.input.Input;
@@ -63,7 +64,6 @@ public class Control extends RendererModule{
 		pixelate();
 
 		player = new Player();
-		player.set(50, 50);
 		player.add();
 
 		Enemy enemy = new Enemy();
@@ -81,6 +81,8 @@ public class Control extends RendererModule{
 		map = new MapLoader().load("maps/" + name + ".tmx");
 		floorLayer = (TiledMapTileLayer) map.getLayers().get("floor");
 		wallLayer = (TiledMapTileLayer) map.getLayers().get("walls");
+
+		player.set(floorLayer.getWidth() * tileSize / 2f, floorLayer.getHeight() * tileSize/2f);
 
 		EntityPhysics.initPhysics(0, 0, wallLayer.getWidth() * tileSize, wallLayer.getHeight() * tileSize);
 	}
@@ -145,7 +147,26 @@ public class Control extends RendererModule{
 			ShadowTrait sh = (ShadowTrait)entity;
 			Draw.rect("shadow" + sh.shadowSize(), entity.getX(), entity.getY() + 1);
 		}
-		Draw.color(0, 0, 0, 0.14f);
+
+		//draw wall shadows
+		for(int y = drawLine.length/2 - 1; y >= -drawLine.length/2; y --){
+			for(int x = -drawRangeX; x <= drawRangeX; x++){
+				int worldx = camx + x, worldy = camy + y;
+				Cell cell = wallLayer.getCell(worldx, worldy);
+				if(cell == null) continue;
+
+				float t = tileSize/2f;
+				float cx = worldx*tileSize, cy = worldy*tileSize + tileSize/2f;
+				float mv = 20f;
+				float sx = 1, sy = 1.5f;
+				float x1 = cx + t, y1 = cy + t, x2 = cx - t, y2 = cy - t,
+				x3 = x2 - mv*sx, y3 = y2 + mv*sy, x4 = cx - t - mv*sx, y4 = cy + t + mv*sy, x5 = x1 - mv*sx, y5 = y1 + mv*sy;
+				Fill.quad(x1, y1, x2, y2, x3, y3, x4, y4);
+				Fill.tri(x1, y1, x4, y4, x5, y5);
+			}
+		}
+
+		Draw.color(0, 0, 0, 0.2f);
 		Graphics.flushSurface();
 		Draw.color();
 
@@ -171,7 +192,7 @@ public class Control extends RendererModule{
 			drawLine[i].clear();
 		}
 
-		drawDebug();
+		//drawDebug();
 	}
 
 	@Override

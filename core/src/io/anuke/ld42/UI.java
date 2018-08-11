@@ -6,7 +6,7 @@ import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 
 import io.anuke.ld42.GameState.State;
-import io.anuke.ld42.dialogs.*;
+import io.anuke.ld42.ui.*;
 import io.anuke.ucore.core.Core;
 import io.anuke.ucore.modules.SceneModule;
 import io.anuke.ucore.scene.Skin;

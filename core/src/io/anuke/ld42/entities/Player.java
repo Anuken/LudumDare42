@@ -31,9 +31,7 @@ public class Player extends Spark{
         move(movement.x, movement.y);
 
         if(Inputs.keyDown("shoot") && Timers.get(this, "shoot", 10)){
-            Bullet bullet = new Bullet(BulletType.testType, this, Angles.mouseAngle(x, y));
-            bullet.set(x, y);
-            bullet.add();
+            bullet(BulletType.testType, Angles.mouseAngle(x, y + height));
         }
     }
 }

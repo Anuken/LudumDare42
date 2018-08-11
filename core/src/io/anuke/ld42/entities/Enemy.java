@@ -16,9 +16,7 @@ public class Enemy extends Spark{
     public void update(){
 
         if(Mathf.chance(0.05)){
-            Bullet bullet = new Bullet(BulletType.testType, this, angleTo(player));
-            bullet.set(x, y);
-            bullet.add();
+           bullet(BulletType.testType, angleTo(player));
         }
     }
 
