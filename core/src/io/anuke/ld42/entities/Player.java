@@ -24,6 +24,7 @@ public class Player extends Spark{
 
     @Override
     public void onDeath(){
+        heal();
         //ui.gameover.show();
         //control.reset();
     }

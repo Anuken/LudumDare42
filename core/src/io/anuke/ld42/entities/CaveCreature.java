@@ -1,7 +1,6 @@
 package io.anuke.ld42.entities;
 
 import com.badlogic.gdx.graphics.Color;
-import io.anuke.ld42.Vars;
 import io.anuke.ucore.core.Effects;
 import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.graphics.Draw;
@@ -12,6 +11,8 @@ import io.anuke.ucore.util.Tmp;
 
 import java.util.Arrays;
 
+import static io.anuke.ld42.Vars.player;
+
 public class CaveCreature extends Spark{
     private static final int segments = 10;
     private static final int tentacles = 6;
@@ -19,10 +20,10 @@ public class CaveCreature extends Spark{
 
     float lerpto;
     float[][] values;
+    float silenceTime;
 
     public CaveCreature(){
-        hitboxTile.set(0, 3, 12, 6);
-        hitbox.set(0, 8, 16, 16);
+        hitbox.setSize(30f);
         height = 0f;
 
         values = new float[tentacles][segments];
@@ -30,6 +31,13 @@ public class CaveCreature extends Spark{
         for(int i = 0; i < tentacles; i++){
             Arrays.fill(values[i], i / tentacles * 360f);
         }
+
+        heal();
+    }
+
+    @Override
+    public void onDeath(){
+        remove();
     }
 
     @Override
@@ -49,16 +57,34 @@ public class CaveCreature extends Spark{
 
     @Override
     public void update(){
-        if(Timers.get(this, "shoot2", 240)){
-            bullet(BulletType.tentacid, angleTo(Vars.player));
+        if(health < maxHealth()/1.5f && Timers.get(this, "shoot2", 220)){
+            for(int i = 0; i < 4; i++){
+                bullet(BulletType.tentacid, angleTo(player) + Mathf.range(20));
+            }
         }
 
-        lerpto = Mathf.slerp(lerpto, angleTo(Vars.player)+ 360f, 0.1f);
+        if(silenceTime > 0){
+            silenceTime -= Timers.delta();
+        }
+
+        if(Timers.get(this, "lines", 250)){
+            silenceTime = 110;
+            for(int i = 0; i < 4; i++){
+                float angle = angleTo(player)+Mathf.range(20f);
+                float s = Mathf.range(20f);
+                for(int j = 0; j < 12; j++){
+                    int f = j;
+                    Timers.run(j * 9, () -> bullet(BulletType.tenta, angle + s*f));
+                }
+            }
+        }
+
+        lerpto = Mathf.slerp(lerpto, angleTo(player)+ 360f, 0.1f);
     }
 
     @Override
     public void draw(){
-        boolean shoot = Timers.get(this, "shoot", 30);
+        boolean shoot = silenceTime <= 0 && Timers.get(this, "shoot", health < 40 ? 15 : 30);
 
         for(int i = 0; i < tentacles; i++){
 
@@ -104,6 +130,6 @@ public class CaveCreature extends Spark{
 
     @Override
     public float maxHealth(){
-        return 100;
+        return 200;
     }
 }

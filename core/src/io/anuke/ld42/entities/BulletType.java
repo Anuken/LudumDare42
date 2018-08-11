@@ -63,15 +63,15 @@ public class BulletType extends BaseBulletType<Bullet>{
         @Override
         public void init(Bullet b){
             super.init(b);
-            b.getVelocity().scl(Mathf.random(1f, 2f));
+            b.getVelocity().scl(Mathf.random(0.5f, 1f));
             Effects.shake(4f, 4f, b);
         }
 
         @Override
         public void update(Bullet b){
             super.update(b);
-            if(Mathf.chance(0.01 * Timers.delta())){
-                Effects.effect(Fx.tentahit, b);
+            if(Mathf.chance(0.1 * Timers.delta())){
+                Effects.effect(Fx.smoke, b);
             }
         }
 
