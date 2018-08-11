@@ -1,8 +1,6 @@
 package io.anuke.ld42.ui;
 
 import com.badlogic.gdx.graphics.Color;
-import io.anuke.ld42.GameState;
-import io.anuke.ld42.GameState.State;
 import io.anuke.ucore.core.Core;
 import io.anuke.ucore.graphics.Draw;
 
@@ -30,7 +28,7 @@ public class DialogBox{
                     in.labelWrap(() -> text).left().top().growX();
                 }).growX().growY();
             }).width(600f);
-        }).visible(() -> text != null && !GameState.is(State.menu));
+        }).visible(() -> text != null);
     }
 
     public void display(String character, String face, String text){

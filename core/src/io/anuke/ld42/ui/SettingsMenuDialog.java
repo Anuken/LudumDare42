@@ -9,7 +9,5 @@ public class SettingsMenuDialog extends SettingsDialog{
 
         main.volumePrefs();
         main.screenshakePref();
-
-        addCloseButton();
     }
 }

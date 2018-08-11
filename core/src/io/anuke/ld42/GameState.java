@@ -11,7 +11,7 @@ public class GameState{
 		state = other;
 	}
 	
-	public static enum State{
-		playing, menu, paused;
+	public enum State{
+		playing, paused;
 	}
 }

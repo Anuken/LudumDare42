@@ -107,8 +107,7 @@ public class Control extends RendererModule{
 	
 	@Override
 	public void update(){
-		ui.dialog.display("Eikan", "eikan_default", "fuck you ej you think ur tough\nif i am kicked i will simply return like a phoenix from the ashes");
-		Entities.update();
+		ui.dialog.display("Eikan", "test_", "lorem ipsumeee text text text text sentence sentance sentience centennial");
 		
 		//TODO remove
 		if(Inputs.keyDown(Input.ESCAPE)){
@@ -116,6 +115,7 @@ public class Control extends RendererModule{
         }
 		
 		if(GameState.is(State.playing)){
+			Entities.update();
 			Timers.update();
 			setCamera(player.x, player.y);
 			
