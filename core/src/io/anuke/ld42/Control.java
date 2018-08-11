@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Sort;
 import io.anuke.ld42.GameState.State;
 import io.anuke.ld42.entities.Aysa;
+import io.anuke.ld42.entities.CaveCreature;
 import io.anuke.ld42.entities.LayerEffect;
 import io.anuke.ld42.entities.Player;
 import io.anuke.ld42.entities.traits.LayerTrait;
@@ -99,12 +100,16 @@ public class Control extends RendererModule{
 		aysa.set(player.x, player.y + 4);
 		aysa.add();
 
+		CaveCreature c = new CaveCreature();
+		c.set(player.x, player.y + 4);
+		c.add();
+
 		EntityPhysics.initPhysics(0, 0, wallLayer.getWidth() * tileSize, wallLayer.getHeight() * tileSize);
 	}
 	
 	@Override
 	public void update(){
-		ui.dialog.display("Aysa", "aysa_default", "lorem ipsumeee text text text text sentence sentance sentience centennial");
+		//ui.dialog.display("Aysa", "aysa_default", "lorem ipsumeee text text text text sentence sentance sentience centennial");
 		
 		//TODO remove
 		if(Inputs.keyDown(Input.ESCAPE)){
