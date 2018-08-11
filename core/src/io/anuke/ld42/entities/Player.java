@@ -13,7 +13,7 @@ public class Player extends Spark{
     private float blinkCooldownTimer = 0f;
 
     private static final float teleportChargeTime = 80f;
-    private static final float teleportMovementReduction = 2f;
+    private static final float teleportMovementReduction = 3f;
     private float teleportCharge = 0f;
 
     public Player(){
@@ -47,6 +47,7 @@ public class Player extends Spark{
         }else{
             walktime = 0;
         }
+        // the actual move happens at the end of this method
 
         if(Inputs.keyDown("shoot") && Timers.get(this, "shoot", 10)){
             bullet(BulletType.testType, Angles.mouseAngle(x, y + height));
