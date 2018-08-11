@@ -1,5 +1,6 @@
 package io.anuke.ld42.entities;
 
+import io.anuke.ucore.core.Graphics;
 import io.anuke.ucore.core.Inputs;
 import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.util.Angles;
@@ -7,9 +8,13 @@ import io.anuke.ucore.util.Angles;
 public class Player extends Spark{
     private float speed = 3f;
 
-    private static final int blinkPower  = 20;
+    private static final int blinkPower = 20;
     private static final float blinkCooldown = 60f;
     private float blinkCooldownTimer = 0f;
+
+    private static final float teleportChargeTime = 80f;
+    private static final float teleportMovementReduction = 3f;
+    private float teleportCharge = 0f;
 
     public Player(){
         hitboxTile.set(0, 3, 12, 6);
@@ -42,7 +47,7 @@ public class Player extends Spark{
         }else{
             walktime = 0;
         }
-        move(movement.x, movement.y);
+        // the actual move happens at the end of this method
 
         if(Inputs.keyDown("shoot") && Timers.get(this, "shoot", 10)){
             bullet(BulletType.testType, Angles.mouseAngle(x, y + height));
@@ -59,6 +64,27 @@ public class Player extends Spark{
             blinkCooldownTimer = blinkCooldown;
         }
 
-        //TODO teleport - hold shift while no movement keys are pressed to charge a teleport which moves player to cursor when charge is complete
+        // teleport - hold shift while no movement keys are pressed to charge a teleport which moves player to cursor when charge is complete
+        if(Inputs.keyDown("teleport")){
+            if(teleportCharge >= teleportChargeTime){ //if charged
+                set(Graphics.mouseWorld().x, Graphics.mouseWorld().y); //teleport
+                teleportCharge = 0f;
+            }else{
+                // charge
+                teleportCharge += Timers.delta();
+            }
+        }
+
+        if(Inputs.keyRelease("teleport")){
+            teleportCharge = 0f;
+        }
+
+        // move slower if charging teleport
+        if(teleportCharge != 0f) {
+            move(movement.x / teleportMovementReduction, movement.y / teleportMovementReduction);
+        }else{
+            move(movement.x, movement.y);
+        }
+
     }
 }
