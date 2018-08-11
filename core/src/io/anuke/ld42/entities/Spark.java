@@ -6,7 +6,7 @@ import io.anuke.ucore.entities.trait.DrawTrait;
 
 public abstract class Spark extends DestructibleEntity implements DrawTrait, ShadowTrait{
     public float height = 12f;
-    public Direction direction = Direction.left;
+    public boolean direction;
     public float walktime;
 
     public void bullet(BulletType type, float angle){
@@ -16,7 +16,17 @@ public abstract class Spark extends DestructibleEntity implements DrawTrait, Sha
     }
 
     @Override
+    public int shadowOffsetX(){
+        return 0;
+    }
+
+    @Override
+    public int shadowOffsetY(){
+        return 0;
+    }
+
+    @Override
     public int shadowSize(){
-        return 8;
+        return 12;
     }
 }

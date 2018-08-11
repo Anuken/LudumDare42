@@ -1,7 +1,6 @@
 package io.anuke.ld42.entities;
 
 public enum Direction {
-    front("front", false),
     back("back", false),
     left("side", true),
     right("side", false);
