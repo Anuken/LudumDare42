@@ -10,13 +10,18 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Sort;
 import io.anuke.ld42.GameState.State;
 import io.anuke.ld42.entities.Enemy;
+import io.anuke.ld42.entities.LayerEffect;
 import io.anuke.ld42.entities.Player;
-import io.anuke.ld42.entities.ShadowTrait;
+import io.anuke.ld42.entities.traits.LayerTrait;
+import io.anuke.ld42.entities.traits.LayerTrait.Layer;
+import io.anuke.ld42.entities.traits.ShadowTrait;
 import io.anuke.ld42.io.MapLoader;
 import io.anuke.ucore.core.*;
 import io.anuke.ucore.core.Inputs.Axis;
 import io.anuke.ucore.entities.Entities;
+import io.anuke.ucore.entities.EntityDraw;
 import io.anuke.ucore.entities.EntityPhysics;
+import io.anuke.ucore.entities.impl.EffectEntity;
 import io.anuke.ucore.entities.trait.DrawTrait;
 import io.anuke.ucore.entities.trait.Entity;
 import io.anuke.ucore.entities.trait.SolidTrait;
@@ -28,12 +33,14 @@ import io.anuke.ucore.input.Input;
 import io.anuke.ucore.modules.RendererModule;
 import io.anuke.ucore.util.Atlas;
 import io.anuke.ucore.util.Mathf;
+import io.anuke.ucore.util.Pooling;
 import io.anuke.ucore.util.Tmp;
 
 import static io.anuke.ld42.Vars.*;
 
 public class Control extends RendererModule{
 	private Array<Entity>[] drawLine = new Array[0];
+
 	private Surface effects;
 
 	public TiledMap map;
@@ -59,6 +66,16 @@ public class Control extends RendererModule{
 		(x, y) -> wallLayer.getCell(x, y) != null && wallLayer.getCell(x, y).getTile().getProperties().containsKey("solid"),
 		(x, y, rect) -> rect.setSize(tileSize).setPosition(x*tileSize - tileSize/2f, y*tileSize));
 
+		Effects.setEffectProvider((effect, color, x, y, rotation, data) -> {
+			EffectEntity entity = Pooling.obtain(LayerEffect.class);
+			entity.effect = effect;
+			entity.color = color;
+			entity.rotation = rotation;
+			entity.data = data;
+			entity.set(x, y);
+			entity.add();
+		});
+
 		effects = Graphics.createSurface();
 
 		pixelate();
@@ -74,6 +91,7 @@ public class Control extends RendererModule{
 	}
 
 	public void reset(){
+		player.heal();
 	    //TODO reset game state
 	}
 
@@ -116,13 +134,14 @@ public class Control extends RendererModule{
 	
 	@Override
 	public void draw(){
+		Draw.color();
 
 		//insert entities into draw lines
 		for(Entity entity : Entities.defaultGroup().all()){
 			float y = entity.getY();
 			float scl = (y - Core.camera.position.y);
 			int position = (int)(scl / tileSize) + drawLine.length/2;
-			if(entity instanceof DrawTrait && position > 0 && position < drawLine.length){
+			if(entity instanceof DrawTrait && getLayer(entity) == Layer.sorted && position > 0 && position < drawLine.length){
 				drawLine[position].add(entity);
 			}
 		}
@@ -145,7 +164,7 @@ public class Control extends RendererModule{
 		for(Entity entity : Entities.defaultGroup().all()){
 			if(!(entity instanceof ShadowTrait)) continue;
 			ShadowTrait sh = (ShadowTrait)entity;
-			Draw.rect("shadow" + sh.shadowSize(), entity.getX(), entity.getY() + 1);
+			Draw.rect("shadow" + sh.shadowSize(), entity.getX(), entity.getY());
 		}
 
 		//draw wall shadows
@@ -158,7 +177,7 @@ public class Control extends RendererModule{
 				float t = tileSize/2f;
 				float cx = worldx*tileSize, cy = worldy*tileSize + tileSize/2f;
 				float mv = 20f;
-				float sx = 1, sy = 1.5f;
+				float sx = 1, sy = 2f;
 				float x1 = cx + t, y1 = cy + t, x2 = cx - t, y2 = cy - t,
 				x3 = x2 - mv*sx, y3 = y2 + mv*sy, x4 = cx - t - mv*sx, y4 = cy + t + mv*sy, x5 = x1 - mv*sx, y5 = y1 + mv*sy;
 				Fill.quad(x1, y1, x2, y2, x3, y3, x4, y4);
@@ -192,15 +211,20 @@ public class Control extends RendererModule{
 			drawLine[i].clear();
 		}
 
-		//drawDebug();
+		EntityDraw.draw(Entities.defaultGroup(), entity -> getLayer(entity) == Layer.bloom);
 	}
 
 	@Override
 	public void resize(){
-		drawLine = new Array[(int)(4 + Core.camera.viewportHeight / tileSize)];
+		drawLine = new Array[(int)(8 + Core.camera.viewportHeight / tileSize)];
 		for(int i = 0; i < drawLine.length; i++){
 			drawLine[i] = new Array<>();
 		}
+	}
+
+	Layer getLayer(Entity entity){
+		if(!(entity instanceof LayerTrait)) return Layer.sorted;
+		return ((LayerTrait) entity).getLayer();
 	}
 
 	void drawDebug(){

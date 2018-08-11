@@ -91,7 +91,7 @@ project(":core") {
 
 
     dependencies {
-                def comp = System.properties["release"] == null || System.properties["release"] == "false"
+        def comp = System.properties["release"] == null || System.properties["release"] == "false"
         if(!comp) println("Note: Compiling release build.")
 
         if(new File(projectDir.parent, '../uCore').exists() && comp){
@@ -103,6 +103,8 @@ project(":core") {
         if(new File(projectDir.parent, '../GDXGifRecorder').exists() && comp) {
             compile project(":GDXGifRecorder")
         }
+
+        compile project(":postprocessing")
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
     }
