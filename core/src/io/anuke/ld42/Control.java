@@ -107,6 +107,7 @@ public class Control extends RendererModule{
 	
 	@Override
 	public void update(){
+		ui.dialog.display("Eikan", "eikan_default", "fuck you ej you think ur tough\nif i am kicked i will simply return like a phoenix from the ashes");
 		Entities.update();
 		
 		//TODO remove

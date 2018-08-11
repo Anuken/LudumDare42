@@ -18,6 +18,7 @@ public class UI extends SceneModule{
     public TutorialDialog tutorial;
     public PausedDialog paused;
     public GameOverDialog gameover;
+    public DialogBox dialog;
 
     protected void loadSkin(){
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"), Core.atlas);
@@ -33,6 +34,7 @@ public class UI extends SceneModule{
         tutorial = new TutorialDialog();
         paused = new PausedDialog();
         gameover = new GameOverDialog();
+        dialog = new DialogBox();
 
         scene.table(menu -> {
             menu.defaults().width(200f);
@@ -54,11 +56,6 @@ public class UI extends SceneModule{
                 menu.addButton("Exit", Gdx.app::exit);
             }
         }).visible(() -> GameState.is(State.menu));
-
-        scene.table(hud -> {
-            hud.top().left();
-
-        });
 
         scene.table(header -> header.top().add("LD42").get().setFontScale(2)).visible(() -> GameState.is(State.menu));
     }
