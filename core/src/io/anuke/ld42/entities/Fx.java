@@ -6,6 +6,7 @@ import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.core.Effects.Effect;
 import io.anuke.ucore.graphics.Fill;
 import io.anuke.ucore.graphics.Lines;
+import io.anuke.ucore.util.Angles;
 
 public class Fx{
 	public static final Effect
@@ -19,6 +20,14 @@ public class Fx{
 	smoke = new Effect(50, e -> {
 		Draw.color(Color.MAROON, Color.BLACK, e.fin());
 		Fill.circle(e.x, e.y, 4 * e.fslope());
+		Draw.reset();
+	}),
+
+	tentahit = new Effect(20, e -> {
+		Draw.color(Color.MAROON, Color.BLACK, e.fout());
+		Angles.randLenVectors(e.id, 10, e.fin() * 20f, (x, y) -> {
+			Fill.circle(x + e.x, y + e.y, e.fout()*4f);
+		});
 		Draw.reset();
 	}),
 

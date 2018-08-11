@@ -102,7 +102,7 @@ public class Control extends RendererModule{
 		aysa.add();
 
 		CaveCreature c = new CaveCreature();
-		c.set(player.x, player.y + 4);
+		c.set(player.x, player.y + 50);
 		c.add();
 
 		EntityPhysics.initPhysics(0, 0, wallLayer.getWidth() * tileSize, wallLayer.getHeight() * tileSize);
@@ -121,6 +121,7 @@ public class Control extends RendererModule{
 			Entities.update();
 			Timers.update();
 			setCamera(player.x, player.y);
+			updateShake();
 			
 			if(Inputs.keyTap("pause")){
 				GameState.set(State.paused);
@@ -143,7 +144,7 @@ public class Control extends RendererModule{
 
 		//insert entities into draw lines
 		for(Entity entity : Entities.defaultGroup().all()){
-			float y = entity.getY();
+			float y = (entity instanceof LayerTrait ? ((LayerTrait) entity).getLayerY() : entity.getY());
 			float scl = (y - Core.camera.position.y);
 			int position = (int)(scl / tileSize) + drawLine.length/2;
 			if(entity instanceof DrawTrait && getLayer(entity) == Layer.sorted && position > 0 && position < drawLine.length){
@@ -163,6 +164,8 @@ public class Control extends RendererModule{
 				Draw.rect(cell.getTile().getTextureRegion(), worldx * tileSize, worldy * tileSize + cell.getTile().getTextureRegion().getRegionHeight()/2f);
 			}
 		}
+
+		EntityDraw.draw(Entities.defaultGroup(), entity -> getLayer(entity) == Layer.floor);
 
 		//draw shadows
 		Graphics.surface(effects);
@@ -216,7 +219,7 @@ public class Control extends RendererModule{
 			drawLine[i].clear();
 		}
 
-		EntityDraw.draw(Entities.defaultGroup(), entity -> getLayer(entity) == Layer.bloom);
+		EntityDraw.draw(Entities.defaultGroup(), entity -> getLayer(entity) == Layer.wall);
 	}
 
 	@Override

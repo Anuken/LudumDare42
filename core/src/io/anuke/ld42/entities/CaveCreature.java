@@ -33,6 +33,11 @@ public class CaveCreature extends Spark{
     }
 
     @Override
+    public Layer getLayer(){
+        return Layer.wall;
+    }
+
+    @Override
     public int shadowSize(){
         return 20;
     }
@@ -44,12 +49,11 @@ public class CaveCreature extends Spark{
 
     @Override
     public void update(){
-        if(Timers.get(this, "shoot", 30)){
-
-         //   bullet(BulletType.testType, angleTo(Vars.player));
+        if(Timers.get(this, "shoot2", 240)){
+            bullet(BulletType.tentacid, angleTo(Vars.player));
         }
 
-        lerpto = Mathf.slerp(lerpto, angleTo(Vars.player)+ 360f, 0.05f);
+        lerpto = Mathf.slerp(lerpto, angleTo(Vars.player)+ 360f, 0.1f);
     }
 
     @Override
@@ -81,7 +85,7 @@ public class CaveCreature extends Spark{
                 }
 
                 if(shoot && j == segments - 1){
-                    bullet(BulletType.tenta, lastx, lasty, values[i][segments-1]);
+                    bullet(BulletType.tenta, x, y, values[i][segments-1]);
                 }
             }
         }

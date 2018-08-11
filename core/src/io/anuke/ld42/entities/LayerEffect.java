@@ -7,6 +7,6 @@ public class LayerEffect extends EffectEntity implements LayerTrait{
 
     @Override
     public Layer getLayer(){
-        return Layer.bloom;
+        return Layer.wall;
     }
 }

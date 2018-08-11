@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Color;
 import io.anuke.ld42.ui.*;
 import io.anuke.ucore.core.Core;
 import io.anuke.ucore.graphics.Draw;
-import io.anuke.ucore.graphics.Fill;
 import io.anuke.ucore.modules.SceneModule;
 import io.anuke.ucore.scene.Skin;
 import io.anuke.ucore.scene.ui.KeybindDialog;
@@ -38,18 +37,18 @@ public class UI extends SceneModule{
         dialog = new DialogBox();
 
         scene.table(hud -> {
-            float wh = 40, hh = 30;
-            float wspace = 20;
-            hud.top().left().table("button", t -> {
-                t.margin(10);
+            float wh = 13*4;
+            float wspace = 10;
+            hud.top().left().table(t -> {
+                t.margin(2);
                 t.top().left().addRect((x, y, w, h) -> {
                     int health = (int)player.health;
                     for(int i = 0; i < player.maxHealth(); i++){
                         Draw.color(health <= i ? Color.BLACK : Color.SCARLET);
-                        Fill.crect(x + (i*(wh + wspace)), y, wh, hh);
+                        Draw.crect("health", x + (i*(wh + wspace)), y, wh, wh);
                     }
                     Draw.color();
-                }).size((wh + wspace)*5 - wspace, hh);
+                }).size((wh + wspace)*5 - wspace, wh);
             });
         });
     }

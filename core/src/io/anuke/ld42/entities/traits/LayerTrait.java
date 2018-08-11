@@ -1,12 +1,17 @@
 package io.anuke.ld42.entities.traits;
 
-public interface LayerTrait{
+import io.anuke.ucore.entities.trait.Entity;
+
+public interface LayerTrait extends Entity{
 
     default Layer getLayer(){
         return Layer.sorted;
     }
+    default float getLayerY(){
+        return getY();
+    }
 
     enum Layer{
-        sorted, bloom
+        sorted, wall, floor
     }
 }

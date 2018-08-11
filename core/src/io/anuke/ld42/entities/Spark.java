@@ -1,12 +1,13 @@
 package io.anuke.ld42.entities;
 
+import io.anuke.ld42.entities.traits.LayerTrait;
 import io.anuke.ld42.entities.traits.ShadowTrait;
 import io.anuke.ucore.entities.impl.DestructibleEntity;
 import io.anuke.ucore.entities.trait.DrawTrait;
 import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.util.Translator;
 
-public abstract class Spark extends DestructibleEntity implements DrawTrait, ShadowTrait{
+public abstract class Spark extends DestructibleEntity implements DrawTrait, ShadowTrait, LayerTrait{
     protected static Translator movement = new Translator();
 
     public float height = 12f;

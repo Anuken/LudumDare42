@@ -14,7 +14,7 @@ public class Bullet extends BulletEntity<BulletType> implements LayerTrait{
 
     @Override
     public Layer getLayer(){
-        return Layer.bloom;
+        return type.layer;
     }
 
     @Override

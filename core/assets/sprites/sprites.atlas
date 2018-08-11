@@ -6,7 +6,7 @@ filter: Nearest,Nearest
 repeat: none
 blank
   rotate: false
-  xy: 233, 2
+  xy: 219, 2
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -27,7 +27,7 @@ cave-creature-teeth
   index: -1
 error
   rotate: false
-  xy: 219, 1
+  xy: 356, 2
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
@@ -83,77 +83,77 @@ eikan_suffering
   index: -1
 hand
   rotate: false
-  xy: 451, 44
+  xy: 231, 6
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 player-back
   rotate: false
-  xy: 245, 7
+  xy: 173, 2
   size: 7, 8
   orig: 7, 8
   offset: 0, 0
   index: -1
 player-back-walk1
   rotate: false
-  xy: 254, 7
+  xy: 182, 2
   size: 7, 8
   orig: 7, 8
   offset: 0, 0
   index: -1
 player-back-walk2
   rotate: false
-  xy: 263, 7
+  xy: 191, 2
   size: 7, 8
   orig: 7, 8
   offset: 0, 0
   index: -1
 player-front
   rotate: false
-  xy: 272, 7
+  xy: 200, 2
   size: 7, 8
   orig: 7, 8
   offset: 0, 0
   index: -1
 player-front-walk1
   rotate: false
-  xy: 185, 2
+  xy: 243, 7
   size: 7, 8
   orig: 7, 8
   offset: 0, 0
   index: -1
 player-front-walk2
   rotate: false
-  xy: 194, 2
+  xy: 252, 7
   size: 7, 8
   orig: 7, 8
   offset: 0, 0
   index: -1
 player-side
   rotate: false
-  xy: 367, 20
+  xy: 261, 7
   size: 7, 8
   orig: 7, 8
   offset: 0, 0
   index: -1
 player-side-walk1
   rotate: false
-  xy: 376, 22
+  xy: 270, 7
   size: 7, 8
   orig: 7, 8
   offset: 0, 0
   index: -1
 player-side-walk2
   rotate: false
-  xy: 486, 159
+  xy: 279, 7
   size: 7, 8
   orig: 7, 8
   offset: 0, 0
   index: -1
 shadow10
   rotate: false
-  xy: 173, 4
+  xy: 231, 9
   size: 10, 6
   orig: 10, 6
   offset: 0, 0
@@ -188,7 +188,7 @@ shadow18
   index: -1
 shadow2
   rotate: false
-  xy: 255, 1
+  xy: 298, 12
   size: 6, 4
   orig: 6, 4
   offset: 0, 0
@@ -223,21 +223,21 @@ shadow26
   index: -1
 shadow4
   rotate: false
-  xy: 263, 1
+  xy: 288, 6
   size: 6, 4
   orig: 6, 4
   offset: 0, 0
   index: -1
 shadow6
   rotate: false
-  xy: 271, 1
+  xy: 296, 6
   size: 6, 4
   orig: 6, 4
   offset: 0, 0
   index: -1
 shadow8
   rotate: false
-  xy: 245, 1
+  xy: 288, 12
   size: 8, 4
   orig: 8, 4
   offset: 0, 0
@@ -420,6 +420,13 @@ default-select-selection
   orig: 3, 3
   offset: 0, 0
   index: -1
+health
+  rotate: false
+  xy: 341, 1
+  size: 13, 13
+  orig: 13, 13
+  offset: 0, 0
+  index: -1
 icon-close
   rotate: false
   xy: 57, 12
@@ -443,14 +450,14 @@ icon-close-over
   index: -1
 list-selection
   rotate: false
-  xy: 203, 9
+  xy: 306, 15
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 menu-bg
   rotate: false
-  xy: 206, 9
+  xy: 306, 12
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -527,14 +534,14 @@ scroll-knob-vertical
   index: -1
 select-box-list-bg
   rotate: false
-  xy: 367, 17
+  xy: 304, 9
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 window-bg
   rotate: false
-  xy: 367, 17
+  xy: 304, 9
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -555,28 +562,28 @@ select-up
   index: -1
 selection
   rotate: false
-  xy: 385, 29
+  xy: 466, 140
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator
   rotate: false
-  xy: 486, 156
+  xy: 443, 31
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 tree-over
   rotate: false
-  xy: 486, 156
+  xy: 443, 31
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator-menu
   rotate: false
-  xy: 466, 140
+  xy: 472, 145
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -625,14 +632,14 @@ slider-vertical
   index: -1
 splitpane
   rotate: false
-  xy: 173, 1
+  xy: 433, 31
   size: 8, 1
   orig: 8, 1
   offset: 0, 0
   index: -1
 splitpane-over
   rotate: false
-  xy: 433, 31
+  xy: 472, 148
   size: 8, 1
   orig: 8, 1
   offset: 0, 0
@@ -646,7 +653,7 @@ splitpane-vertical
   index: -1
 splitpane-vertical-over
   rotate: false
-  xy: 281, 7
+  xy: 486, 159
   size: 1, 8
   orig: 1, 8
   offset: 0, 0
@@ -684,7 +691,7 @@ tooltip-bg
   index: -1
 tree-minus
   rotate: false
-  xy: 233, 5
+  xy: 219, 5
   size: 10, 10
   orig: 10, 10
   offset: 0, 0
@@ -698,7 +705,7 @@ tree-plus
   index: -1
 tree-selection
   rotate: false
-  xy: 472, 146
+  xy: 367, 25
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -706,7 +713,7 @@ tree-selection
   index: -1
 white
   rotate: false
-  xy: 279, 2
+  xy: 451, 42
   size: 3, 3
   orig: 3, 3
   offset: 0, 0
