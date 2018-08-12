@@ -2,6 +2,7 @@ package io.anuke.ld42.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import io.anuke.ld42.entities.traits.LayerTrait.Layer;
+import io.anuke.ld42.graphics.Palette;
 import io.anuke.ucore.core.Effects;
 import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.entities.impl.BaseBulletType;
@@ -13,18 +14,45 @@ import io.anuke.ucore.util.Mathf;
 public class BulletType extends BaseBulletType<Bullet>{
     public static final BulletType
 
-    testType = new BulletType(){
+    playerBullet = new BulletType(){
         {
             damage = 1;
             speed = 9f;
-            hiteffect = Fx.explosion;
+            hiteffect = Fx.playerhit;
         }
 
         @Override
         public void draw(Bullet b){
-            Draw.color(Color.PURPLE);
-            Lines.poly(b.x, b.y, 3, 10);
-            Draw.color();
+            Lines.stroke(3f);
+            Draw.color(Palette.eikan);
+            Draw.alpha(0.5f);
+            Fill.circle(b.x, b.y, 6f);
+            Draw.alpha(1f);
+
+            Fill.circle(b.x, b.y, 4);
+            Draw.reset();
+            Fill.circle(b.x, b.y, 2);
+        }
+    },
+
+    aysaBullet = new BulletType(){
+        {
+            damage = 1;
+            speed = 9f;
+            hiteffect = Fx.aysahit;
+        }
+
+        @Override
+        public void draw(Bullet b){
+            Lines.stroke(3f);
+            Draw.color(Palette.aysa);
+            Draw.alpha(0.5f);
+            Fill.circle(b.x, b.y, 6f);
+            Draw.alpha(1f);
+
+            Fill.circle(b.x, b.y, 4);
+            Draw.reset();
+            Fill.circle(b.x, b.y, 2);
         }
     },
 
@@ -54,8 +82,9 @@ public class BulletType extends BaseBulletType<Bullet>{
     tentacid = new BulletType(){
         {
             damage = 1f;
-            speed = 1.9f;
+            speed = 4f;
             lifetime = 100f;
+            drag = 0.02f;
             hiteffect = Fx.tentahit;
             hiteffect = Fx.tentahit;
         }
@@ -79,10 +108,12 @@ public class BulletType extends BaseBulletType<Bullet>{
         public void despawned(Bullet b){
             super.despawned(b);
 
-            for(int i = 0; i < 1; i++){
-                Bullet a = new Bullet(acid, b.getOwner(), 0f);
-                a.set(b.x + Mathf.range(5f), b.y + Mathf.range(5f));
-                a.add();
+            Bullet a = new Bullet(acid, b.getOwner(), 0f);
+            a.set(b.x + Mathf.range(5f), b.y + Mathf.range(5f));
+            a.add();
+
+            for(int i = 0; i < 3; i++){
+                Effects.effect(Fx.tentahit, b.x + Mathf.range(4f), b.y + Mathf.range(4f));
             }
         }
 
@@ -94,15 +125,16 @@ public class BulletType extends BaseBulletType<Bullet>{
 
         @Override
         public void draw(Bullet b){
-            Lines.stroke(3f);
+            float s = 0.5f + b.fslope()*0.5f;
+
             Draw.color(Color.MAROON);
             Draw.alpha(0.5f);
-            Fill.circle(b.x, b.y, 12f);
+            Fill.circle(b.x, b.y, 12f*s);
             Draw.alpha(1f);
 
-            Fill.circle(b.x, b.y, 9);
+            Fill.circle(b.x, b.y, 9*s);
             Draw.reset();
-            Fill.circle(b.x, b.y, 4);
+            Fill.circle(b.x, b.y, 4*s);
         }
     },
 

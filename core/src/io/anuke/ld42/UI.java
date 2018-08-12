@@ -8,6 +8,7 @@ import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.modules.SceneModule;
 import io.anuke.ucore.scene.Skin;
 import io.anuke.ucore.scene.ui.KeybindDialog;
+import io.anuke.ucore.util.Mathf;
 
 import static io.anuke.ld42.Vars.player;
 
@@ -39,12 +40,22 @@ public class UI extends SceneModule{
         scene.table(hud -> {
             float wh = 13*4;
             float wspace = 10;
+            float[] lerphp = {0};
             hud.top().left().table(t -> {
                 t.margin(2);
                 t.top().left().addRect((x, y, w, h) -> {
-                    int health = (int)player.health;
+                    lerphp[0] = Mathf.lerpDelta(lerphp[0], player.health, 0.1f);
+                    if(player.health - lerphp[0] < 0.1f && player.health - lerphp[0] > 0){
+                        lerphp[0] = player.health;
+                    }
+
                     for(int i = 0; i < player.maxHealth(); i++){
-                        Draw.color(health <= i ? Color.BLACK : Color.SCARLET);
+                        float fract = lerphp[0] - i;
+                        if(fract < 0.99f){
+                            Draw.color(Color.BLACK, Color.WHITE,  fract);
+                        }else{
+                            Draw.color(Color.SCARLET);
+                        }
                         Draw.crect("health", x + (i*(wh + wspace)), y, wh, wh);
                     }
                     Draw.color();

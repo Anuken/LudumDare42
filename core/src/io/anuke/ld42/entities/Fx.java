@@ -2,6 +2,7 @@ package io.anuke.ld42.entities;
 
 import com.badlogic.gdx.graphics.Color;
 
+import io.anuke.ld42.graphics.Palette;
 import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.core.Effects.Effect;
 import io.anuke.ucore.graphics.Fill;
@@ -25,6 +26,30 @@ public class Fx{
 
 	tentahit = new Effect(20, e -> {
 		Draw.color(Color.MAROON, Color.BLACK, e.fout());
+		Angles.randLenVectors(e.id, 10, e.fin() * 20f, (x, y) -> {
+			Fill.circle(x + e.x, y + e.y, e.fout()*4f);
+		});
+		Draw.reset();
+	}),
+
+	tentakill = new Effect(50, e -> {
+		Draw.color(Color.MAROON, Color.BLACK, e.fout());
+		Angles.randLenVectors(e.id, 20, e.fin() * 100f, (x, y) -> {
+			Fill.circle(x + e.x, y + e.y, e.fout()*9f);
+		});
+		Draw.reset();
+	}),
+
+	playerhit = new Effect(20, e -> {
+		Draw.color(Color.WHITE, Palette.eikan, e.fout());
+		Angles.randLenVectors(e.id, 10, e.fin() * 20f, (x, y) -> {
+			Fill.circle(x + e.x, y + e.y, e.fout()*4f);
+		});
+		Draw.reset();
+	}),
+
+	aysahit = new Effect(20, e -> {
+		Draw.color(Color.WHITE, Palette.aysa, e.fout());
 		Angles.randLenVectors(e.id, 10, e.fin() * 20f, (x, y) -> {
 			Fill.circle(x + e.x, y + e.y, e.fout()*4f);
 		});

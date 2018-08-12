@@ -100,7 +100,7 @@ public class Control extends RendererModule{
 		player.set(floorLayer.getWidth() * tileSize / 2f, floorLayer.getHeight() * tileSize/2f);
 
 		Aysa aysa = new Aysa();
-		aysa.set(player.x, player.y + 4);
+		aysa.set(player.x, player.y - 50);
 		aysa.add();
 
 		CaveCreature c = new CaveCreature();

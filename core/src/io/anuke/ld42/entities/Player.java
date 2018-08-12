@@ -27,8 +27,7 @@ public class Player extends Spark{
 
     @Override
     public void onDeath(){
-        heal();
-        dead = false;
+        Timers.run(0f, this::heal);
         //ui.gameover.show();
         //control.reset();
     }
@@ -60,7 +59,7 @@ public class Player extends Spark{
         // the actual move happens at the end of this method
 
         if(Inputs.keyDown("shoot") && Timers.get(this, "shoot", 10)){
-            bullet(BulletType.testType, Angles.mouseAngle(x, y + height));
+            bullet(BulletType.playerBullet, Angles.mouseAngle(x, y + height));
         }
 
         // blink - tap shift while moving to do a quick dash in that direction

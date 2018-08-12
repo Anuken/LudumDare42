@@ -38,6 +38,10 @@ public class CaveCreature extends Spark{
     @Override
     public void onDeath(){
         remove();
+
+        for(int i = 0; i < 4; i++){
+            Timers.run(i*10, () -> Effects.effect(Fx.tentakill, x + Mathf.range(20f), y + Mathf.range(20f)));
+        }
     }
 
     @Override
@@ -72,9 +76,9 @@ public class CaveCreature extends Spark{
             for(int i = 0; i < 4; i++){
                 float angle = angleTo(player)+Mathf.range(20f);
                 float s = Mathf.range(20f);
-                for(int j = 0; j < 12; j++){
+                for(int j = 0; j < 10; j++){
                     int f = j;
-                    Timers.run(j * 9, () -> bullet(BulletType.tenta, angle + s*f));
+                    Timers.run(j * 12, () -> bullet(BulletType.tenta, angle + s*f));
                 }
             }
         }
@@ -84,9 +88,9 @@ public class CaveCreature extends Spark{
 
     @Override
     public void draw(){
-        boolean shoot = silenceTime <= 0 && Timers.get(this, "shoot", health < 40 ? 15 : 30);
 
         for(int i = 0; i < tentacles; i++){
+            boolean shoot = silenceTime <= 0 && Timers.get(this, "shoot-" + i, health < 40 ? 30 : 50 + i);
 
             float lastx = x, lasty = y;
             float base = i / (float)tentacles * 360f;
