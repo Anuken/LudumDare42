@@ -214,7 +214,10 @@
    <properties>
     <property name="text">eikan surprised: &quot;Aysa! You alright? I heard tremors down there.&quot;
 aysa sweatdrop: &quot;Yeah, about that...&quot;
-eikan annoyed: &quot;What did you do this time?&quot;</property>
+eikan annoyed: &quot;What did you do this time?&quot;
+:tremors
+eikan surprised: &quot;!!!&quot;
+eikan determined: &quot;Come on, let's check it out.&quot;</property>
     <property name="type" value="y"/>
    </properties>
   </object>

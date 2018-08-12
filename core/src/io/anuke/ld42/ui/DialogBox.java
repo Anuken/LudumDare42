@@ -35,7 +35,7 @@ public class DialogBox{
     }
 
     public boolean active(){
-        return dialog.size > 0;
+        return dialog.size > 0 || text != null;
     }
 
     public void next(){
@@ -54,9 +54,14 @@ public class DialogBox{
     }
 
     private void display(DialogEntry entry){
-        this.character = entry.name;
-        this.face = entry.facepic;
-        this.text = entry.text;
+        if(entry.command == null){
+            this.character = entry.name;
+            this.face = entry.facepic;
+            this.text = entry.text;
+        }else{
+            entry.command.run();
+            next();
+        }
     }
 
 }

@@ -194,6 +194,10 @@ public class Control extends RendererModule{
 					Array<DialogEntry> entries = new Array<>();
 					String[] dialog = ((String)props.get("text")).split("\n");
 					for(String s : dialog){
+						if(s.startsWith(":")){
+							entries.add(new DialogEntry(Command.valueOf(s.substring(1))));
+							continue;
+						}
 						String facepic = s.substring(0, s.indexOf(':'));
 						String name = Strings.capitalize(facepic.substring(0, facepic.indexOf(' ')));
 						String text = s.substring(s.indexOf(": ") + 3);
@@ -214,8 +218,8 @@ public class Control extends RendererModule{
 
 		smoothCamera(player.x, player.y, 0.1f);
 		limitCamera(6f, player.x, player.y);
-		updateShake();
 		clampCamera(0, 16, tileSize * floorLayer.getWidth(), tileSize * floorLayer.getHeight());
+		updateShake();
 
 		if(GameState.is(State.playing)){
 			Entities.update();
@@ -299,6 +303,8 @@ public class Control extends RendererModule{
 		Graphics.flushSurface();
 		Draw.color();
 
+		drawFog();
+
 		//draw walls
 		for(int y = drawLine.length/2 - 1; y >= -drawLine.length/2; y --){
 			Array<Entity> line = drawLine[y + drawLine.length/2];
@@ -322,8 +328,6 @@ public class Control extends RendererModule{
 		}
 
 		EntityDraw.draw(Entities.defaultGroup(), entity -> getLayer(entity) == Layer.wall);
-
-		drawFog();
 
 		//draw hit flash
 		if(hitTime > 0){
