@@ -16,6 +16,7 @@ import java.util.Arrays;
 
 import static io.anuke.ld42.Vars.control;
 import static io.anuke.ld42.Vars.player;
+import static io.anuke.ld42.Vars.shadowOpacity;
 
 public class CaveCreature extends Spark implements EnemyTrait{
     private int segments = 10;
@@ -46,6 +47,7 @@ public class CaveCreature extends Spark implements EnemyTrait{
 
     @Override
     public void onDeath(){
+        control.flash(Color.MAROON);
         remove();
 
         for(int i = 0; i < 4; i++){
@@ -168,7 +170,7 @@ public class CaveCreature extends Spark implements EnemyTrait{
         Draw.rect("cave-creature-teeth", x, y, sz, sz, Mathf.absin(Timers.time(), 40f, 100f));
 
         Graphics.surface();
-        Draw.color(0, 0, 0, 0.2f);
+        Draw.color(0, 0, 0, shadowOpacity);
         Draw.rect(control.effects.texture(), Core.camera.position.x + 4, Core.camera.position.y - 4, control.effects.texture().getWidth(), -control.effects.texture().getHeight());
         Draw.color();
         Draw.rect(control.effects.texture(), Core.camera.position.x, Core.camera.position.y, control.effects.texture().getWidth(), -control.effects.texture().getHeight());

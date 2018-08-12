@@ -60,7 +60,7 @@ public class Control extends RendererModule{
     private Color flashColor;
 	
 	public Control(){
-		Core.cameraScale = 2;
+		Core.cameraScale = 3;
 	    Core.batch = new SpriteBatch();
 		Core.atlas = new Atlas("sprites.atlas");
 	
@@ -226,7 +226,7 @@ public class Control extends RendererModule{
 			}
 		}
 
-		Draw.color(0, 0, 0, 0.2f);
+		Draw.color(0, 0, 0, shadowOpacity);
 		Graphics.flushSurface();
 		Draw.color();
 

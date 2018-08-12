@@ -13,6 +13,7 @@ public class Vars{
 	public static boolean debug = true;
 
 	public static final int tileSize = 16;
+	public static final float shadowOpacity = 0.3f;
 	
 	public static String[] tutorialText = {
 		"Tutorial line 1",
