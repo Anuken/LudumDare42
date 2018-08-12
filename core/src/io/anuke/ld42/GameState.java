@@ -1,7 +1,7 @@
 package io.anuke.ld42;
 
 public class GameState{
-	private static State state = State.intro;
+	private static State state = State.playing;
 	
 	public static boolean is(State other){
 		return state == other;

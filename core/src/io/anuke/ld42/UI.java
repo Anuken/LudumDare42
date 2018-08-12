@@ -39,6 +39,28 @@ public class UI extends SceneModule{
         tutorial = new TutorialDialog();
         paused = new PausedDialog();
         gameover = new GameOverDialog();
+
+        scene.table(table -> {
+            float[] lastValue = {0};
+            float[] hlerp = {0};
+
+            table.bottom();
+            table.table("button", t -> {
+                t.margin(8);
+                t.addRect((x, y, w, h) -> {
+                    if(lastValue[0] != enemy.health()){
+                        lastValue[0] = enemy.health();
+                    }
+                    hlerp[0] = Mathf.lerpDelta(hlerp[0], enemy.healthf(), 0.1f);
+
+                    Draw.color(Color.BLACK);
+                    Fill.crect(x, y, w, h);
+                    Draw.color(Color.SCARLET);
+                    Draw.crect("bar", x, y, w * hlerp[0], h);
+                }).size(500, 30);
+            });
+        }).visible(() -> enemy != null && !GameState.is(State.intro));
+
         dialog = new DialogBox();
 
         scene.table(hud -> {
@@ -66,27 +88,6 @@ public class UI extends SceneModule{
                 }).size((wh + wspace)*5 - wspace, wh);
             });
         }).visible(() -> !GameState.is(State.intro));
-
-        scene.table(table -> {
-            float[] lastValue = {0};
-            float[] hlerp = {0};
-
-            table.bottom();
-            table.table("button", t -> {
-                t.margin(8);
-                t.addRect((x, y, w, h) -> {
-                    if(lastValue[0] != enemy.health()){
-                        lastValue[0] = enemy.health();
-                    }
-                    hlerp[0] = Mathf.lerpDelta(hlerp[0], enemy.healthf(), 0.1f);
-
-                    Draw.color(Color.BLACK);
-                    Fill.crect(x, y, w, h);
-                    Draw.color(Color.SCARLET);
-                    Draw.crect("bar", x, y, w * hlerp[0], h);
-                }).size(500, 30);
-            });
-        }).visible(() -> enemy != null && !GameState.is(State.intro));
 
         scene.table(table -> {
             table.top().right();

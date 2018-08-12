@@ -7,8 +7,8 @@ public interface ShadowTrait extends Entity{
     int shadowSize();
     int shadowOffsetX();
     int shadowOffsetY();
-    
+
     default void drawShadow(){
-        Draw.rect("shadow" + shadowSize(), getX(), getY());
+        Draw.rect("shadow" + shadowSize(), getX() + shadowOffsetX(), getY() + shadowOffsetY());
     }
 }

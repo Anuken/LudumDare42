@@ -5,21 +5,23 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Sort;
 import io.anuke.ld42.GameState.State;
-import io.anuke.ld42.entities.Aysa;
-import io.anuke.ld42.entities.CaveCreature;
-import io.anuke.ld42.entities.LayerEffect;
-import io.anuke.ld42.entities.Player;
+import io.anuke.ld42.entities.*;
 import io.anuke.ld42.entities.traits.LayerTrait;
 import io.anuke.ld42.entities.traits.LayerTrait.Layer;
 import io.anuke.ld42.entities.traits.ShadowTrait;
 import io.anuke.ld42.io.MapLoader;
+import io.anuke.ld42.ui.DialogEntry;
 import io.anuke.ucore.core.*;
 import io.anuke.ucore.core.Inputs.Axis;
 import io.anuke.ucore.entities.Entities;
@@ -34,11 +36,10 @@ import io.anuke.ucore.graphics.Fill;
 import io.anuke.ucore.graphics.Lines;
 import io.anuke.ucore.graphics.Surface;
 import io.anuke.ucore.input.Input;
+import io.anuke.ucore.lights.PointLight;
+import io.anuke.ucore.lights.RayHandler;
 import io.anuke.ucore.modules.RendererModule;
-import io.anuke.ucore.util.Atlas;
-import io.anuke.ucore.util.Mathf;
-import io.anuke.ucore.util.Pooling;
-import io.anuke.ucore.util.Tmp;
+import io.anuke.ucore.util.*;
 
 import static io.anuke.ld42.Vars.*;
 
@@ -48,6 +49,7 @@ public class Control extends RendererModule{
 	private TiledMap map;
 	private TiledMapTileLayer wallLayer;
 	private TiledMapTileLayer floorLayer;
+	private MapLayer objectLayer;
 
 	private Texture fog;
 
@@ -58,8 +60,14 @@ public class Control extends RendererModule{
     private float flashTime;
     private float timeScale = 1f;
     private Color flashColor;
-	
+
+    private RayHandler rays;
+	private PointLight light;
+
+	private Array<Trigger> triggers = new Array<>();
+
 	public Control(){
+
 		Core.cameraScale = 3;
 	    Core.batch = new SpriteBatch();
 		Core.atlas = new Atlas("sprites.atlas");
@@ -67,6 +75,7 @@ public class Control extends RendererModule{
 		KeyBinds.defaults(
 			"move_x", new Axis(Input.A, Input.D),
 			"move_y", new Axis(Input.S, Input.W),
+			"next", Input.SPACE,
 			"dash", Input.SPACE, // dash key
             "teleport", Input.SHIFT_LEFT, // teleport key
 			"shoot", Input.MOUSE_LEFT,
@@ -107,6 +116,14 @@ public class Control extends RendererModule{
 		player.add();
 
 		loadMap("map");
+
+		rays = new RayHandler();
+		rays.setAmbientLight(Color.WHITE);
+
+		light = new PointLight(rays, 50);
+		light.setColor(Color.WHITE);
+		light.setDistance(100);
+		light.add(rays);
 	}
 
     public void flash(Color color){
@@ -123,15 +140,27 @@ public class Control extends RendererModule{
 		map = new MapLoader().load("maps/" + name + ".tmx");
 		floorLayer = (TiledMapTileLayer) map.getLayers().get("floor");
 		wallLayer = (TiledMapTileLayer) map.getLayers().get("walls");
+		objectLayer = map.getLayers().get("objects");
 
-		player.set(floorLayer.getWidth() * tileSize / 2f, floorLayer.getHeight() * tileSize/2f);
+		triggers.clear();
+
+		for(MapObject obj : objectLayer.getObjects()){
+			MapProperties props = obj.getProperties();
+			if(props.containsKey("type")){
+				int x = (int)(((TiledMapTileMapObject)obj).getX()/tileSize);
+				int y =  (int)((((TiledMapTileMapObject)obj).getY())/tileSize);
+				triggers.add(new Trigger(props.get("type").equals("x") ? x : y, props.get("type").equals("x"), obj));
+			}
+		}
+
+		player.set(16, 48);
 
 		Aysa aysa = new Aysa();
 		aysa.set(player.x, player.y - 50);
 		aysa.add();
 
 		CaveCreature c = new CaveCreature();
-		c.set(player.x, player.y + 50);
+		c.set(floorLayer.getWidth() * tileSize/2f, floorLayer.getHeight() * tileSize/2f);
 		c.add();
 
 		enemy = c;
@@ -141,7 +170,11 @@ public class Control extends RendererModule{
 	
 	@Override
 	public void update(){
-		//ui.dialog.display("Aysa", "aysa_default", "lorem ipsumeee text text text text sentence sentance sentience centennial");
+		light.setPosition(player.x, player.y);
+
+		if(Inputs.keyTap("next")){
+			ui.dialog.next();
+		}
 		
 		//TODO remove
 		if(Inputs.keyDown(Input.ESCAPE)){
@@ -151,26 +184,59 @@ public class Control extends RendererModule{
         if(enemy != null && enemy.isDead()){
 		    enemy = null;
         }
-		
+
+        int px = (int)(player.x / tileSize), py = (int)(player.y / tileSize);
+
+        for(Trigger trigger : triggers){
+			if((!trigger.x && trigger.pos == px) || (trigger.x && trigger.pos == py)){
+				MapProperties props = trigger.object.getProperties();
+				if(props.containsKey("text")){
+					Array<DialogEntry> entries = new Array<>();
+					String[] dialog = ((String)props.get("text")).split("\n");
+					for(String s : dialog){
+						String facepic = s.substring(0, s.indexOf(':'));
+						String name = Strings.capitalize(facepic.substring(0, facepic.indexOf(' ')));
+						String text = s.substring(s.indexOf(": ") + 3);
+						text = text.substring(0, text.length()-1);
+						entries.add(new DialogEntry(name, facepic, text));
+					}
+					ui.dialog.display(entries);
+				}else{
+					throw new RuntimeException("Invalid trigger.");
+				}
+				triggers.removeValue(trigger, true);
+				break;
+			}
+		}
+
+        player.x = Mathf.clamp(player.x, 0, tileSize * floorLayer.getWidth());
+		player.y = Mathf.clamp(player.y, 16, tileSize * floorLayer.getHeight());
+
+		smoothCamera(player.x, player.y, 0.1f);
+		limitCamera(6f, player.x, player.y);
+		updateShake();
+		clampCamera(0, 16, tileSize * floorLayer.getWidth(), tileSize * floorLayer.getHeight());
+
 		if(GameState.is(State.playing)){
 			Entities.update();
 			Timers.update();
-			smoothCamera(player.x, player.y, 0.1f);
-			limitCamera(6f, player.x, player.y);
-			updateShake();
 			
 			if(Inputs.keyTap("pause")){
 				GameState.set(State.paused);
 				ui.paused.show();
 			}
 		}else if(GameState.is(State.paused)){
-			if(Inputs.keyTap("pause")){
+			if(Inputs.keyTap("pause") && !ui.dialog.active()){
 				GameState.set(State.playing);
 				ui.paused.hide();
 			}
 		}
 
 		drawDefault();
+		if(drawLights){
+			rays.setCombinedMatrix(Core.camera);
+			rays.updateAndRender();
+		}
 		record();
 	}
 	
@@ -283,6 +349,10 @@ public class Control extends RendererModule{
         }else{
             timeScale = Mathf.lerp(timeScale, 0f, Gdx.graphics.getDeltaTime() * 60f * 0.2f);
         }
+
+        if(GameState.is(State.intro)){
+			drawIntro();
+		}
 	}
 
 	@Override
@@ -291,11 +361,38 @@ public class Control extends RendererModule{
 		for(int i = 0; i < drawLine.length; i++){
 			drawLine[i] = new Array<>();
 		}
+
+		rays.resizeFBO(Gdx.graphics.getWidth()/Core.cameraScale, Gdx.graphics.getHeight()/Core.cameraScale);
 	}
 
 	Layer getLayer(Entity entity){
 		if(!(entity instanceof LayerTrait)) return Layer.sorted;
 		return ((LayerTrait) entity).getLayer();
+	}
+
+	void drawIntro(){
+
+		Draw.color(Color.BLACK);
+		Draw.alpha(Mathf.clamp(1f-ui.intro.fadeInTime));
+		Fill.rect(Core.camera.position.x, Core.camera.position.y, Core.camera.viewportWidth, Core.camera.viewportHeight);
+
+		float time = ui.intro.time;
+
+		Graphics.setAdditiveBlending();
+		Draw.color(Color.SCARLET);
+		for(int i = 0; i < 100; i++){
+			float rx = Mathf.randomSeedRange(i+1, Core.camera.viewportWidth/2f) + Core.camera.position.x +
+						Mathf.sin(time + i*312, 100f+i*3, 100f-i);
+			float ry = Mathf.randomSeedRange(i+2, Core.camera.viewportHeight/2f) + Core.camera.position.y +
+						Mathf.sin(time + i*254, 80f+i*2, -100f+i);
+			float rs = 0.8f + Mathf.absin(time +i*412, 40f, 0.5f);
+			Draw.alpha(0.5f * ui.intro.particleFadeTime);
+			Fill.circle(rx, ry, 15f*rs);
+			Fill.circle(rx, ry, 10f*rs);
+			Fill.circle(rx, ry, 5f*rs);
+		}
+		Draw.color();
+		Graphics.setNormalBlending();
 	}
 
 	void drawFog(){
@@ -305,7 +402,7 @@ public class Control extends RendererModule{
 
 		for(int i = 0; i < 3; i++){
 			Draw.colorl(0.3f - i * 0.05f);
-			Draw.alpha(0.2f - i*0.05f);
+			Draw.alpha(0.3f - i*0.05f);
 
 			float fx = Core.camera.position.x / f + Timers.time()/(tscl - i *100) + i *0.632f,
 				  fy = Core.camera.position.y/f + i *0.321f;

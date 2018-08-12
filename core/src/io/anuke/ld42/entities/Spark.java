@@ -5,6 +5,7 @@ import io.anuke.ld42.entities.traits.ShadowTrait;
 import io.anuke.ucore.entities.impl.DestructibleEntity;
 import io.anuke.ucore.entities.trait.DrawTrait;
 import io.anuke.ucore.graphics.Draw;
+import io.anuke.ucore.util.Mathf;
 import io.anuke.ucore.util.Translator;
 
 public abstract class Spark extends DestructibleEntity implements DrawTrait, ShadowTrait, LayerTrait{
@@ -36,7 +37,7 @@ public abstract class Spark extends DestructibleEntity implements DrawTrait, Sha
 
     @Override
     public int shadowOffsetX(){
-        return 0;
+        return -Mathf.sign(direction)*2;
     }
 
     @Override

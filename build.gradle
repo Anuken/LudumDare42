@@ -24,7 +24,7 @@ allprojects {
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.1'
-        uCoreVersion = 'b565b117bd'
+        uCoreVersion = '25eeaf81fa'
     }
 
     repositories {

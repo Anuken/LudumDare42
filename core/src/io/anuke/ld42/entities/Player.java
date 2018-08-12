@@ -8,6 +8,7 @@ import io.anuke.ucore.entities.trait.SolidTrait;
 import io.anuke.ucore.util.Angles;
 
 import static io.anuke.ld42.Vars.control;
+import static io.anuke.ld42.Vars.ui;
 
 public class Player extends Spark{
     private float speed = 3f;
@@ -55,6 +56,8 @@ public class Player extends Spark{
 
     @Override
     public void update(){
+        if(ui.dialog.active()) return;
+
         movement.set(Inputs.getAxis("move_x") * speed, Inputs.getAxis("move_y") * speed).limit(speed);
         if(!movement.isZero()){
             direction = (Math.abs(movement.x) > 0 ? movement.x > 0 : movement.y > 0);
@@ -93,6 +96,8 @@ public class Player extends Spark{
         if(Inputs.keyRelease("teleport")){
             teleportCharge = 0f;
         }
+
+        movement.scl(Timers.delta());
 
         // move slower if charging teleport
         if(teleportCharge != 0f) {
