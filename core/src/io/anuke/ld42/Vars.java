@@ -1,12 +1,14 @@
 package io.anuke.ld42;
 
 import io.anuke.ld42.entities.Player;
+import io.anuke.ld42.entities.traits.EnemyTrait;
 
 public class Vars{
 	public static Control control;
 	public static UI ui;
 
 	public static Player player;
+	public static EnemyTrait enemy;
 
 	public static boolean debug = true;
 

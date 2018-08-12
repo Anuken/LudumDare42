@@ -6,13 +6,13 @@ import io.anuke.ld42.ui.*;
 import io.anuke.ucore.core.Core;
 import io.anuke.ucore.entities.Entities;
 import io.anuke.ucore.graphics.Draw;
+import io.anuke.ucore.graphics.Fill;
 import io.anuke.ucore.modules.SceneModule;
 import io.anuke.ucore.scene.Skin;
 import io.anuke.ucore.scene.ui.KeybindDialog;
 import io.anuke.ucore.util.Mathf;
 
-import static io.anuke.ld42.Vars.debug;
-import static io.anuke.ld42.Vars.player;
+import static io.anuke.ld42.Vars.*;
 
 public class UI extends SceneModule{
     public KeybindDialog keybind;
@@ -64,6 +64,28 @@ public class UI extends SceneModule{
                 }).size((wh + wspace)*5 - wspace, wh);
             });
         });
+
+        scene.table(table -> {
+            float[] lastValue = {0};
+            float[] lerpto = {0};
+
+            table.bottom();
+            table.table("button", t -> {
+                t.margin(4);
+                t.addRect((x, y, w, h) -> {
+                    if(lastValue[0] != enemy.health()){
+                        lastValue[0] = enemy.health();
+                        lerpto[0] = 0.5f;
+                    }
+                    lerpto[0] = Mathf.lerpDelta(lerpto[0], 0f, 0.1f);
+
+                    Draw.color(Color.BLACK);
+                    Fill.crect(x, y, w, h);
+                    Draw.color(Color.SCARLET, Color.WHITE, lerpto[0]);
+                    Fill.crect(x, y, w * enemy.healthf(), h);
+                }).size(500, 40);
+            });
+        }).visible(() -> enemy != null);
 
         scene.table(table -> {
             table.top().right();

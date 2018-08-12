@@ -119,6 +119,8 @@ public class Control extends RendererModule{
 		c.set(player.x, player.y + 50);
 		c.add();
 
+		enemy = c;
+
 		EntityPhysics.initPhysics(0, 0, wallLayer.getWidth() * tileSize, wallLayer.getHeight() * tileSize);
 	}
 	
@@ -129,6 +131,10 @@ public class Control extends RendererModule{
 		//TODO remove
 		if(Inputs.keyDown(Input.ESCAPE)){
 			Gdx.app.exit();
+        }
+
+        if(enemy != null && enemy.isDead()){
+		    enemy = null;
         }
 		
 		if(GameState.is(State.playing)){

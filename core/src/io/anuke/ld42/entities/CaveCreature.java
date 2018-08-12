@@ -97,6 +97,7 @@ public class CaveCreature extends Spark implements EnemyTrait{
 
         if(health < maxHealth()/4 && !phase2){
             phase2 = true;
+            health += 50;
             control.flash(Color.MAROON);
             Timers.run(0f, () -> {
                 len = 7f;

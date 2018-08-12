@@ -2,15 +2,12 @@ package io.anuke.ld42.entities;
 
 import io.anuke.ld42.entities.traits.EnemyTrait;
 import io.anuke.ucore.core.Timers;
-import io.anuke.ucore.entities.Entities;
-import io.anuke.ucore.entities.EntityPhysics;
-import io.anuke.ucore.entities.trait.Entity;
-import io.anuke.ucore.entities.trait.HealthTrait;
 import io.anuke.ucore.entities.trait.SolidTrait;
 import io.anuke.ucore.util.Mathf;
 
+import static io.anuke.ld42.Vars.enemy;
+
 public class Aysa extends Spark{
-    Entity target;
     boolean strafe;
 
     public Aysa(){
@@ -25,18 +22,14 @@ public class Aysa extends Spark{
 
     @Override
     public void update(){
-        if(target == null){
-            target = EntityPhysics.getClosest(Entities.defaultGroup(), x, y, 1000f, e -> e instanceof CaveCreature);
-        }
-
-        if(target == null || ((HealthTrait)target).isDead()) return;
+        if(enemy == null) return;
 
         if(Timers.get(this, "shoot", 40)){
-            bullet(BulletType.aysaBullet, angleTo(target));
+            bullet(BulletType.aysaBullet, angleTo(enemy));
         }
 
         float speed = 1.5f;
-        movement.set(x, y).sub(target.getX(), target.getY()).rotate(strafe ? 90 : 270).setLength(speed);
+        movement.set(x, y).sub(enemy.getX(), enemy.getY()).rotate(strafe ? 90 : 270).setLength(speed);
 
         if(Mathf.chance(0.01 * Timers.delta())){
             strafe = !strafe;
