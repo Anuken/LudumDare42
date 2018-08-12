@@ -40,10 +40,11 @@ public class Control extends RendererModule{
 	private Array<Entity>[] drawLine = new Array[0];
 
 	private Surface effects;
+	private TiledMap map;
+	private TiledMapTileLayer wallLayer;
+	private TiledMapTileLayer floorLayer;
 
-	public TiledMap map;
-	public TiledMapTileLayer wallLayer;
-	public TiledMapTileLayer floorLayer;
+	public float hitTime;
 	
 	public Control(){
 		Core.cameraScale = 3;
@@ -221,6 +222,16 @@ public class Control extends RendererModule{
 		}
 
 		EntityDraw.draw(Entities.defaultGroup(), entity -> getLayer(entity) == Layer.wall);
+
+		//draw hit flash
+		if(hitTime > 0){
+			Draw.color(Color.SCARLET);
+			Draw.alpha(Mathf.clamp(hitTime/5f));
+			Lines.stroke(4f);
+			Lines.crect(Core.camera.position.x, Core.camera.position.y, Core.camera.viewportWidth, Core.camera.viewportHeight);
+			Draw.reset();
+			hitTime -= Timers.delta();
+		}
 	}
 
 	@Override

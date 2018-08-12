@@ -3,7 +3,10 @@ package io.anuke.ld42.entities;
 import io.anuke.ucore.core.Graphics;
 import io.anuke.ucore.core.Inputs;
 import io.anuke.ucore.core.Timers;
+import io.anuke.ucore.entities.trait.SolidTrait;
 import io.anuke.ucore.util.Angles;
+
+import static io.anuke.ld42.Vars.control;
 
 public class Player extends Spark{
     private float speed = 3f;
@@ -25,8 +28,14 @@ public class Player extends Spark{
     @Override
     public void onDeath(){
         heal();
+        dead = false;
         //ui.gameover.show();
         //control.reset();
+    }
+
+    @Override
+    public void onHit(SolidTrait entity){
+        control.hitTime = 10f;
     }
 
     @Override

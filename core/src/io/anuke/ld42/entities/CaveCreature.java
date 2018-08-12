@@ -67,7 +67,7 @@ public class CaveCreature extends Spark{
             silenceTime -= Timers.delta();
         }
 
-        if(Timers.get(this, "lines", 250)){
+        if(Timers.get(this, "lines", 250) && health < maxHealth()/2){
             silenceTime = 110;
             for(int i = 0; i < 4; i++){
                 float angle = angleTo(player)+Mathf.range(20f);
