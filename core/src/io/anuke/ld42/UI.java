@@ -2,6 +2,7 @@ package io.anuke.ld42;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import io.anuke.ld42.GameState.State;
 import io.anuke.ld42.ui.*;
 import io.anuke.ucore.core.Core;
 import io.anuke.ucore.entities.Entities;
@@ -63,7 +64,7 @@ public class UI extends SceneModule{
                     Draw.color();
                 }).size((wh + wspace)*5 - wspace, wh);
             });
-        });
+        }).visible(() -> !GameState.is(State.intro));
 
         scene.table(table -> {
             float[] lastValue = {0};
@@ -71,7 +72,7 @@ public class UI extends SceneModule{
 
             table.bottom();
             table.table("button", t -> {
-                t.margin(4);
+                t.margin(8);
                 t.addRect((x, y, w, h) -> {
                     if(lastValue[0] != enemy.health()){
                         lastValue[0] = enemy.health();
@@ -82,10 +83,10 @@ public class UI extends SceneModule{
                     Draw.color(Color.BLACK);
                     Fill.crect(x, y, w, h);
                     Draw.color(Color.SCARLET, Color.WHITE, lerpto[0]);
-                    Fill.crect(x, y, w * enemy.healthf(), h);
-                }).size(500, 40);
+                    Draw.crect("bar", x, y, w * enemy.healthf(), h);
+                }).size(500, 30);
             });
-        }).visible(() -> enemy != null);
+        }).visible(() -> enemy != null && !GameState.is(State.intro));
 
         scene.table(table -> {
             table.top().right();

@@ -6,7 +6,7 @@ filter: Nearest,Nearest
 repeat: none
 blank
   rotate: false
-  xy: 219, 2
+  xy: 451, 44
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -27,7 +27,7 @@ cave-creature-teeth
   index: -1
 error
   rotate: false
-  xy: 356, 2
+  xy: 219, 3
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
@@ -83,7 +83,7 @@ eikan_suffering
   index: -1
 hand
   rotate: false
-  xy: 231, 6
+  xy: 284, 14
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -118,42 +118,42 @@ player-front
   index: -1
 player-front-walk1
   rotate: false
-  xy: 243, 7
+  xy: 257, 7
   size: 7, 8
   orig: 7, 8
   offset: 0, 0
   index: -1
 player-front-walk2
   rotate: false
-  xy: 252, 7
+  xy: 266, 7
   size: 7, 8
   orig: 7, 8
   offset: 0, 0
   index: -1
 player-side
   rotate: false
-  xy: 261, 7
+  xy: 275, 7
   size: 7, 8
   orig: 7, 8
   offset: 0, 0
   index: -1
 player-side-walk1
   rotate: false
-  xy: 270, 7
+  xy: 367, 20
   size: 7, 8
   orig: 7, 8
   offset: 0, 0
   index: -1
 player-side-walk2
   rotate: false
-  xy: 279, 7
+  xy: 376, 22
   size: 7, 8
   orig: 7, 8
   offset: 0, 0
   index: -1
 shadow10
   rotate: false
-  xy: 231, 9
+  xy: 245, 9
   size: 10, 6
   orig: 10, 6
   offset: 0, 0
@@ -188,7 +188,7 @@ shadow18
   index: -1
 shadow2
   rotate: false
-  xy: 298, 12
+  xy: 385, 26
   size: 6, 4
   orig: 6, 4
   offset: 0, 0
@@ -223,21 +223,21 @@ shadow26
   index: -1
 shadow4
   rotate: false
-  xy: 288, 6
+  xy: 443, 28
   size: 6, 4
   orig: 6, 4
   offset: 0, 0
   index: -1
 shadow6
   rotate: false
-  xy: 296, 6
+  xy: 472, 145
   size: 6, 4
   orig: 6, 4
   offset: 0, 0
   index: -1
 shadow8
   rotate: false
-  xy: 288, 12
+  xy: 433, 28
   size: 8, 4
   orig: 8, 4
   offset: 0, 0
@@ -340,6 +340,13 @@ tile
   orig: 16, 32
   offset: 0, 0
   index: -1
+bar
+  rotate: false
+  xy: 341, 1
+  size: 13, 13
+  orig: 13, 13
+  offset: 0, 0
+  index: -1
 border
   rotate: false
   xy: 424, 58
@@ -422,7 +429,7 @@ default-select-selection
   index: -1
 health
   rotate: false
-  xy: 341, 1
+  xy: 356, 1
   size: 13, 13
   orig: 13, 13
   offset: 0, 0
@@ -450,14 +457,14 @@ icon-close-over
   index: -1
 list-selection
   rotate: false
-  xy: 306, 15
+  xy: 287, 15
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 menu-bg
   rotate: false
-  xy: 306, 12
+  xy: 367, 17
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -534,14 +541,14 @@ scroll-knob-vertical
   index: -1
 select-box-list-bg
   rotate: false
-  xy: 304, 9
+  xy: 385, 23
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 window-bg
   rotate: false
-  xy: 304, 9
+  xy: 385, 23
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -569,21 +576,21 @@ selection
   index: -1
 separator
   rotate: false
-  xy: 443, 31
+  xy: 480, 148
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 tree-over
   rotate: false
-  xy: 443, 31
+  xy: 480, 148
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator-menu
   rotate: false
-  xy: 472, 145
+  xy: 403, 27
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -632,14 +639,14 @@ slider-vertical
   index: -1
 splitpane
   rotate: false
-  xy: 433, 31
+  xy: 245, 6
   size: 8, 1
   orig: 8, 1
   offset: 0, 0
   index: -1
 splitpane-over
   rotate: false
-  xy: 472, 148
+  xy: 393, 27
   size: 8, 1
   orig: 8, 1
   offset: 0, 0
@@ -691,7 +698,7 @@ tooltip-bg
   index: -1
 tree-minus
   rotate: false
-  xy: 219, 5
+  xy: 233, 5
   size: 10, 10
   orig: 10, 10
   offset: 0, 0
@@ -705,7 +712,7 @@ tree-plus
   index: -1
 tree-selection
   rotate: false
-  xy: 367, 25
+  xy: 245, 1
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -713,7 +720,7 @@ tree-selection
   index: -1
 white
   rotate: false
-  xy: 451, 42
+  xy: 250, 1
   size: 3, 3
   orig: 3, 3
   offset: 0, 0

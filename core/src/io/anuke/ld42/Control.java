@@ -140,7 +140,8 @@ public class Control extends RendererModule{
 		if(GameState.is(State.playing)){
 			Entities.update();
 			Timers.update();
-			setCamera(player.x, player.y);
+			smoothCamera(player.x, player.y, 0.1f);
+			limitCamera(6f, player.x, player.y);
 			updateShake();
 			
 			if(Inputs.keyTap("pause")){

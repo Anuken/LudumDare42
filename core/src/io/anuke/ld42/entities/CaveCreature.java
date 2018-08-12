@@ -160,6 +160,6 @@ public class CaveCreature extends Spark implements EnemyTrait{
 
     @Override
     public float maxHealth(){
-        return 200;
+        return 300;
     }
 }
