@@ -76,8 +76,7 @@ public class Control extends RendererModule{
 			"move_x", new Axis(Input.A, Input.D),
 			"move_y", new Axis(Input.S, Input.W),
 			"next", Input.SPACE,
-			"dash", Input.SPACE, // dash key
-            "teleport", Input.SHIFT_LEFT, // teleport key
+			"dash", Input.SPACE,
 			"shoot", Input.MOUSE_LEFT,
 			"pause", Input.ESCAPE
 		);

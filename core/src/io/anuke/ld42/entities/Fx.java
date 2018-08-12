@@ -40,6 +40,13 @@ public class Fx{
 		Draw.reset();
 	}),
 
+	playershoot = new Effect(10, e -> {
+		Draw.color(Color.WHITE, Palette.eikan, e.fin());
+		Lines.stroke(2f * e.fout());
+		Lines.circle(e.x, e.y, 8 * e.fin());
+		Draw.reset();
+	}),
+
 	playerhit = new Effect(20, e -> {
 		Draw.color(Color.WHITE, Palette.eikan, e.fout());
 		Angles.randLenVectors(e.id, 10, e.fin() * 20f, (x, y) -> {
