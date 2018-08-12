@@ -2,6 +2,8 @@ package io.anuke.ld42;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -33,18 +35,23 @@ import io.anuke.ucore.graphics.Lines;
 import io.anuke.ucore.graphics.Surface;
 import io.anuke.ucore.input.Input;
 import io.anuke.ucore.modules.RendererModule;
-import io.anuke.ucore.util.*;
+import io.anuke.ucore.util.Atlas;
+import io.anuke.ucore.util.Mathf;
+import io.anuke.ucore.util.Pooling;
+import io.anuke.ucore.util.Tmp;
 
 import static io.anuke.ld42.Vars.*;
 
 public class Control extends RendererModule{
 	private Array<Entity>[] drawLine = new Array[0];
 
-	private Surface effects;
 	private TiledMap map;
 	private TiledMapTileLayer wallLayer;
 	private TiledMapTileLayer floorLayer;
 
+	private Texture fog;
+
+    public Surface effects;
 	public float hitTime;
 
 	private float flashDuration = 50f;
@@ -85,6 +92,9 @@ public class Control extends RendererModule{
 			entity.set(x, y);
 			entity.add();
 		});
+
+		fog = new Texture("sprites/fog.png");
+		fog.setWrap(TextureWrap.MirroredRepeat, TextureWrap.MirroredRepeat);
 
 		effects = Graphics.createSurface();
 
@@ -244,6 +254,8 @@ public class Control extends RendererModule{
 
 		EntityDraw.draw(Entities.defaultGroup(), entity -> getLayer(entity) == Layer.wall);
 
+		drawFog();
+
 		//draw hit flash
 		if(hitTime > 0){
 			Draw.color(Color.SCARLET);
@@ -282,6 +294,32 @@ public class Control extends RendererModule{
 		if(!(entity instanceof LayerTrait)) return Layer.sorted;
 		return ((LayerTrait) entity).getLayer();
 	}
+
+	void drawFog(){
+	    float f = fog.getWidth();
+	    float scl = 1f;
+	    float tscl = 2000f;
+
+		for(int i = 0; i < 3; i++){
+			Draw.colorl(0.3f - i * 0.05f);
+			Draw.alpha(0.2f - i*0.05f);
+
+			float fx = Core.camera.position.x / f + Timers.time()/(tscl - i *100) + i *0.632f,
+				  fy = Core.camera.position.y/f + i *0.321f;
+			float uw = Core.camera.viewportWidth/fog.getWidth()/2f/scl;
+			float uh = Core.camera.viewportHeight/fog.getHeight()/2f/scl;
+
+			Core.batch.draw(fog,
+			Core.camera.position.x - Core.camera.viewportWidth/2f,
+			Core.camera.position.y - Core.camera.viewportHeight/2f,
+			Core.camera.viewportWidth,
+			Core.camera.viewportHeight,
+			fx - uw, fy - uh,
+			fx + uw, fy + uh);
+		}
+
+        Draw.color();
+    }
 
 	void drawDebug(){
 

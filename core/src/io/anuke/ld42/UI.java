@@ -69,6 +69,7 @@ public class UI extends SceneModule{
         scene.table(table -> {
             float[] lastValue = {0};
             float[] lerpto = {0};
+            float[] hlerp = {0};
 
             table.bottom();
             table.table("button", t -> {
@@ -79,11 +80,12 @@ public class UI extends SceneModule{
                         lerpto[0] = 0.5f;
                     }
                     lerpto[0] = Mathf.lerpDelta(lerpto[0], 0f, 0.1f);
+                    hlerp[0] = Mathf.lerpDelta(hlerp[0], enemy.healthf(), 0.1f);
 
                     Draw.color(Color.BLACK);
                     Fill.crect(x, y, w, h);
                     Draw.color(Color.SCARLET, Color.WHITE, lerpto[0]);
-                    Draw.crect("bar", x, y, w * enemy.healthf(), h);
+                    Draw.crect("bar", x, y, w * hlerp[0], h);
                 }).size(500, 30);
             });
         }).visible(() -> enemy != null && !GameState.is(State.intro));

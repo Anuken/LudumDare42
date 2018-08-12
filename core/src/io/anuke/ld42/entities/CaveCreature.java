@@ -2,7 +2,9 @@ package io.anuke.ld42.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import io.anuke.ld42.entities.traits.EnemyTrait;
+import io.anuke.ucore.core.Core;
 import io.anuke.ucore.core.Effects;
+import io.anuke.ucore.core.Graphics;
 import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.graphics.Fill;
@@ -119,6 +121,7 @@ public class CaveCreature extends Spark implements EnemyTrait{
 
     @Override
     public void draw(){
+        Graphics.surface(control.effects);
 
         for(int i = 0; i < tentacles; i++){
             boolean shoot = silenceTime <= 0 && Timers.get(this, "shoot-" + i, health < 40 ? 30 : 50 + i);
@@ -135,7 +138,7 @@ public class CaveCreature extends Spark implements EnemyTrait{
                 float ang = values[i][j] + Mathf.sin(Timers.time() + i *59 + j/2f, 20f + Mathf.randomSeed(i) * 6 - j, 25f);
 
                 float fract = 1f-(float)j/segments;
-                Draw.color(Color.MAROON, Color.BLACK, 1f-fract);
+                Draw.color(Color.MAROON, Color.BLACK, 0.5f);
                 Tmp.v1.set(len, 0).rotate(ang);
                 float newx = lastx + Tmp.v1.x, newy = lasty + Tmp.v1.y;
                 Lines.stroke(fract * (9f));
@@ -163,6 +166,12 @@ public class CaveCreature extends Spark implements EnemyTrait{
         Fill.circle(x, y, sz/4f);
         Draw.color();
         Draw.rect("cave-creature-teeth", x, y, sz, sz, Mathf.absin(Timers.time(), 40f, 100f));
+
+        Graphics.surface();
+        Draw.color(0, 0, 0, 0.2f);
+        Draw.rect(control.effects.texture(), Core.camera.position.x + 4, Core.camera.position.y - 4, control.effects.texture().getWidth(), -control.effects.texture().getHeight());
+        Draw.color();
+        Draw.rect(control.effects.texture(), Core.camera.position.x, Core.camera.position.y, control.effects.texture().getWidth(), -control.effects.texture().getHeight());
     }
 
     @Override
