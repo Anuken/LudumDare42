@@ -2,9 +2,7 @@ package io.anuke.ld42.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import io.anuke.ld42.entities.traits.EnemyTrait;
-import io.anuke.ucore.core.Core;
 import io.anuke.ucore.core.Effects;
-import io.anuke.ucore.core.Graphics;
 import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.graphics.Fill;
@@ -16,7 +14,6 @@ import java.util.Arrays;
 
 import static io.anuke.ld42.Vars.control;
 import static io.anuke.ld42.Vars.player;
-import static io.anuke.ld42.Vars.shadowOpacity;
 
 public class CaveCreature extends Spark implements EnemyTrait{
     private int segments = 10;
@@ -106,6 +103,12 @@ public class CaveCreature extends Spark implements EnemyTrait{
             }
         }
 
+        for(int i = 0; i < tentacles; i++){
+            if(silenceTime <= 0 && Timers.get(this, "shoot-" + i, health < 40 ? 30 : 50 + i)){
+                bullet(BulletType.tenta, x, y, values[i][segments-1]);
+            }
+        }
+
         if(health < maxHealth()/4 && !phase2){
             phase2 = true;
             health += 70;
@@ -122,11 +125,20 @@ public class CaveCreature extends Spark implements EnemyTrait{
     }
 
     @Override
+    public void drawShadow(){
+        float ox = 4, oy = -4;
+
+        x += ox;
+        y += oy;
+        draw();
+        x -= ox;
+        y -= oy;
+    }
+
+    @Override
     public void draw(){
-        Graphics.surface(control.effects);
 
         for(int i = 0; i < tentacles; i++){
-            boolean shoot = silenceTime <= 0 && Timers.get(this, "shoot-" + i, health < 40 ? 30 : 50 + i);
 
             float lastx = x, lasty = y;
             float base = i / (float)tentacles * 360f;
@@ -151,10 +163,6 @@ public class CaveCreature extends Spark implements EnemyTrait{
                 if(Mathf.chance(0.08 * Timers.delta() / tentacles)){
                     Effects.effect(Fx.smoke, newx + Mathf.range(len), newy + Mathf.range(len));
                 }
-
-                if(shoot && j == segments - 1){
-                    bullet(BulletType.tenta, x, y, values[i][segments-1]);
-                }
             }
         }
 
@@ -168,12 +176,6 @@ public class CaveCreature extends Spark implements EnemyTrait{
         Fill.circle(x, y, sz/4f);
         Draw.color();
         Draw.rect("cave-creature-teeth", x, y, sz, sz, Mathf.absin(Timers.time(), 40f, 100f));
-
-        Graphics.surface();
-        Draw.color(0, 0, 0, shadowOpacity);
-        Draw.rect(control.effects.texture(), Core.camera.position.x + 4, Core.camera.position.y - 4, control.effects.texture().getWidth(), -control.effects.texture().getHeight());
-        Draw.color();
-        Draw.rect(control.effects.texture(), Core.camera.position.x, Core.camera.position.y, control.effects.texture().getWidth(), -control.effects.texture().getHeight());
     }
 
     @Override

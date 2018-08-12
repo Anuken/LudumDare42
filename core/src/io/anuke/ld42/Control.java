@@ -205,7 +205,7 @@ public class Control extends RendererModule{
 		for(Entity entity : Entities.defaultGroup().all()){
 			if(!(entity instanceof ShadowTrait)) continue;
 			ShadowTrait sh = (ShadowTrait)entity;
-			Draw.rect("shadow" + sh.shadowSize(), entity.getX(), entity.getY());
+			sh.drawShadow();
 		}
 
 		//draw wall shadows
