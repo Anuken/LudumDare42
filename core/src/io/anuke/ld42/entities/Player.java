@@ -1,5 +1,6 @@
 package io.anuke.ld42.entities;
 
+import io.anuke.ld42.entities.traits.EnemyTrait;
 import io.anuke.ucore.core.Graphics;
 import io.anuke.ucore.core.Inputs;
 import io.anuke.ucore.core.Timers;
@@ -21,8 +22,13 @@ public class Player extends Spark{
 
     public Player(){
         hitboxTile.set(0, 3, 12, 6);
-        hitbox.set(0, 8, 16, 16);
+        hitbox.set(0, 2, 4, 4);
         heal();
+    }
+
+    @Override
+    public boolean collides(SolidTrait other){
+        return other instanceof Bullet && ((Bullet)other).getOwner() instanceof EnemyTrait;
     }
 
     @Override
@@ -39,7 +45,7 @@ public class Player extends Spark{
 
     @Override
     public float maxHealth(){
-        return 5;
+        return 7;
     }
 
     @Override

@@ -47,7 +47,7 @@ public class Control extends RendererModule{
 	public float hitTime;
 	
 	public Control(){
-		Core.cameraScale = 3;
+		Core.cameraScale = 2;
 	    Core.batch = new SpriteBatch();
 		Core.atlas = new Atlas("sprites.atlas");
 	

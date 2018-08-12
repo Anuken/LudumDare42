@@ -8,6 +8,8 @@ public class Vars{
 
 	public static Player player;
 
+	public static boolean debug = false;
+
 	public static final int tileSize = 16;
 	
 	public static String[] tutorialText = {

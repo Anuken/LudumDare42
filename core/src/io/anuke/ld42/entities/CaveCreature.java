@@ -1,6 +1,7 @@
 package io.anuke.ld42.entities;
 
 import com.badlogic.gdx.graphics.Color;
+import io.anuke.ld42.entities.traits.EnemyTrait;
 import io.anuke.ucore.core.Effects;
 import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.graphics.Draw;
@@ -13,7 +14,7 @@ import java.util.Arrays;
 
 import static io.anuke.ld42.Vars.player;
 
-public class CaveCreature extends Spark{
+public class CaveCreature extends Spark implements EnemyTrait{
     private static final int segments = 10;
     private static final int tentacles = 6;
     private static final float len = 6f;
@@ -55,13 +56,18 @@ public class CaveCreature extends Spark{
     }
 
     @Override
+    public float drawSize(){
+        return 100;
+    }
+
+    @Override
     public String name(){
         return "cave-creature";
     }
 
     @Override
     public void update(){
-        if(health < maxHealth()/1.5f && Timers.get(this, "shoot2", 220)){
+        if(Timers.get(this, "shoot2", 220)){
             for(int i = 0; i < 4; i++){
                 bullet(BulletType.tentacid, angleTo(player) + Mathf.range(20));
             }
@@ -83,6 +89,10 @@ public class CaveCreature extends Spark{
             }
         }
 
+        if(silenceTime < 0 && Timers.get(this, "burst", 300) && health < maxHealth()/4){
+
+        }
+
         lerpto = Mathf.slerp(lerpto, angleTo(player)+ 360f, 0.1f);
     }
 
@@ -94,23 +104,25 @@ public class CaveCreature extends Spark{
 
             float lastx = x, lasty = y;
             float base = i / (float)tentacles * 360f;
+            //float len = CaveCreature.len + Mathf.randomSeed(i + 5, 0, 20);
+            //float bthick = Mathf.randomSeed(i + 4, 0, 10)/4f;
+
             for(int j = 0; j < segments; j++){
                 base = Mathf.slerp(base, lerpto, 0.1f);
                 values[i][j] = Mathf.slerpDelta(values[i][j], base, 0.01f);
 
                 float ang = values[i][j] + Mathf.sin(Timers.time() + i *59 + j/2f, 20f + Mathf.randomSeed(i) * 6 - j, 25f);
 
-
                 float fract = 1f-(float)j/segments;
                 Draw.color(Color.MAROON, Color.BLACK, 1f-fract);
                 Tmp.v1.set(len, 0).rotate(ang);
                 float newx = lastx + Tmp.v1.x, newy = lasty + Tmp.v1.y;
-                Lines.stroke(fract * 9f);
+                Lines.stroke(fract * (9f));
                 Lines.line(lastx, lasty, newx, newy);
                 lastx = newx;
                 lasty = newy;
 
-                if(Mathf.chance(0.01 * Timers.delta())){
+                if(Mathf.chance(0.08 * Timers.delta() / tentacles)){
                     Effects.effect(Fx.smoke, newx + Mathf.range(len), newy + Mathf.range(len));
                 }
 

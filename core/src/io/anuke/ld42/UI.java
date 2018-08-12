@@ -62,6 +62,10 @@ public class UI extends SceneModule{
                 }).size((wh + wspace)*5 - wspace, wh);
             });
         });
+
+        scene.table(table -> {
+
+        });
     }
 
 }
