@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Sort;
 import io.anuke.ld42.GameState.State;
@@ -45,6 +46,11 @@ public class Control extends RendererModule{
 	private TiledMapTileLayer floorLayer;
 
 	public float hitTime;
+
+	private float flashDuration = 50f;
+    private float flashTime;
+    private float timeScale = 1f;
+    private Color flashColor;
 	
 	public Control(){
 		Core.cameraScale = 2;
@@ -61,6 +67,7 @@ public class Control extends RendererModule{
 		);
 		
 		Settings.loadAll("io.anuke.ld42");
+		Timers.setDeltaProvider(() -> Gdx.graphics.getDeltaTime() * 60f * timeScale);
 
 		EntityPhysics.initPhysics();
 		EntityPhysics.collisions().setCollider(tileSize,
@@ -86,6 +93,11 @@ public class Control extends RendererModule{
 
 		loadMap("map");
 	}
+
+    public void flash(Color color){
+        flashTime = flashDuration;
+        flashColor = color;
+    }
 
 	public void reset(){
 		player.heal();
@@ -232,6 +244,21 @@ public class Control extends RendererModule{
 			Draw.reset();
 			hitTime -= Timers.delta();
 		}
+
+        if(flashTime > 0){
+            Draw.color(flashColor);
+            Draw.alpha(Interpolation.fade.apply(Mathf.clamp(flashTime/flashDuration)));
+            Fill.rect(Core.camera.position.x, Core.camera.position.y, Core.camera.viewportWidth, Core.camera.viewportHeight);
+            Draw.color();
+
+            flashTime -= Gdx.graphics.getDeltaTime() * 60f;
+        }
+
+        if(flashTime / flashDuration < 0.5f){
+            timeScale = Mathf.lerp(timeScale, 1f, Gdx.graphics.getDeltaTime() * 60f * 0.01f);
+        }else{
+            timeScale = Mathf.lerp(timeScale, 0f, Gdx.graphics.getDeltaTime() * 60f * 0.2f);
+        }
 	}
 
 	@Override

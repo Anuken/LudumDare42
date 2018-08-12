@@ -8,7 +8,7 @@ public class Vars{
 
 	public static Player player;
 
-	public static boolean debug = false;
+	public static boolean debug = true;
 
 	public static final int tileSize = 16;
 	

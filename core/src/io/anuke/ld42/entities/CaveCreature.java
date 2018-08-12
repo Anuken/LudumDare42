@@ -12,12 +12,15 @@ import io.anuke.ucore.util.Tmp;
 
 import java.util.Arrays;
 
+import static io.anuke.ld42.Vars.control;
 import static io.anuke.ld42.Vars.player;
 
 public class CaveCreature extends Spark implements EnemyTrait{
-    private static final int segments = 10;
-    private static final int tentacles = 6;
-    private static final float len = 6f;
+    private int segments = 10;
+    private int tentacles = 6;
+    private float len = 6f;
+
+    boolean phase2;
 
     float lerpto;
     float[][] values;
@@ -26,14 +29,17 @@ public class CaveCreature extends Spark implements EnemyTrait{
     public CaveCreature(){
         hitbox.setSize(30f);
         height = 0f;
+        initTentacles();
 
+        heal();
+    }
+
+    void initTentacles(){
         values = new float[tentacles][segments];
 
         for(int i = 0; i < tentacles; i++){
-            Arrays.fill(values[i], i / tentacles * 360f);
+            Arrays.fill(values[i], (float)i / tentacles * 360f);
         }
-
-        heal();
     }
 
     @Override
@@ -67,7 +73,7 @@ public class CaveCreature extends Spark implements EnemyTrait{
 
     @Override
     public void update(){
-        if(Timers.get(this, "shoot2", 220)){
+        if(!phase2 && Timers.get(this, "shoot2", 220)){
             for(int i = 0; i < 4; i++){
                 bullet(BulletType.tentacid, angleTo(player) + Mathf.range(20));
             }
@@ -89,8 +95,15 @@ public class CaveCreature extends Spark implements EnemyTrait{
             }
         }
 
-        if(silenceTime < 0 && Timers.get(this, "burst", 300) && health < maxHealth()/4){
-
+        if(health < maxHealth()/4 && !phase2){
+            phase2 = true;
+            control.flash(Color.MAROON);
+            Timers.run(0f, () -> {
+                len = 7f;
+                tentacles = 20;
+                segments += 6f;
+                initTentacles();
+            });
         }
 
         lerpto = Mathf.slerp(lerpto, angleTo(player)+ 360f, 0.1f);
