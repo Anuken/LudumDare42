@@ -65,6 +65,8 @@ public class Control extends RendererModule{
 			"shoot", Input.MOUSE_LEFT,
 			"pause", Input.ESCAPE
 		);
+
+		Effects.setShakeFalloff(40000);
 		
 		Settings.loadAll("io.anuke.ld42");
 		Timers.setDeltaProvider(() -> Gdx.graphics.getDeltaTime() * 60f * timeScale);

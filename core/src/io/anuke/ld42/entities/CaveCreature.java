@@ -79,6 +79,13 @@ public class CaveCreature extends Spark implements EnemyTrait{
             }
         }
 
+        if(phase2 && Mathf.chance(0.1 * Timers.delta())){
+            Rock rock = new Rock();
+            rock.set(x + Mathf.range(300f), y + Mathf.range(300f));
+            rock.add();
+            Effects.shake(3f, 10f, rock);
+        }
+
         if(silenceTime > 0){
             silenceTime -= Timers.delta();
         }
@@ -97,7 +104,7 @@ public class CaveCreature extends Spark implements EnemyTrait{
 
         if(health < maxHealth()/4 && !phase2){
             phase2 = true;
-            health += 50;
+            health += 70;
             control.flash(Color.MAROON);
             Timers.run(0f, () -> {
                 len = 7f;

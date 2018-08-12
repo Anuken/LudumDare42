@@ -9,6 +9,7 @@ import io.anuke.ucore.entities.impl.BaseBulletType;
 import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.graphics.Fill;
 import io.anuke.ucore.graphics.Lines;
+import io.anuke.ucore.util.Angles;
 import io.anuke.ucore.util.Mathf;
 
 public class BulletType extends BaseBulletType<Bullet>{
@@ -32,6 +33,29 @@ public class BulletType extends BaseBulletType<Bullet>{
             Fill.circle(b.x, b.y, 4);
             Draw.reset();
             Fill.circle(b.x, b.y, 2);
+        }
+    },
+
+    rock = new BulletType(){
+        {
+            damage = 1;
+            speed = 0f;
+            pierce = true;
+            lifetime = 20f;
+            hitsize = 20;
+        }
+
+        @Override
+        public void draw(Bullet e){
+            Draw.color(Color.LIGHT_GRAY);
+            Lines.stroke(2f * e.fout());
+            Lines.circle(e.x, e.y, 10f * e.fin());
+
+            Draw.color(Color.GRAY);
+            Angles.randLenVectors(e.id, 10, e.fin() * 30f, (x, y) -> {
+                Fill.circle(x + e.x, y + e.y, e.fout()*4f);
+            });
+            Draw.reset();
         }
     },
 
