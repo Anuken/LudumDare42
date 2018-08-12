@@ -93,6 +93,9 @@ public class Control extends RendererModule{
 			entity.add();
 		});
 
+		Musics.load("sine.ogg");
+		Musics.createTracks("intro", "sine");
+
 		fog = new Texture("sprites/fog.png");
 		fog.setWrap(TextureWrap.MirroredRepeat, TextureWrap.MirroredRepeat);
 

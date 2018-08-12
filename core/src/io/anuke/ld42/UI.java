@@ -23,6 +23,7 @@ public class UI extends SceneModule{
     public PausedDialog paused;
     public GameOverDialog gameover;
     public DialogBox dialog;
+    public Intro intro;
 
     protected void loadSkin(){
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"), Core.atlas);
@@ -93,6 +94,8 @@ public class UI extends SceneModule{
             table.row();
             table.label(() -> Entities.defaultGroup().size() + " entities");
         }).visible(() -> debug);
+
+        intro = new Intro();
     }
 
 }
