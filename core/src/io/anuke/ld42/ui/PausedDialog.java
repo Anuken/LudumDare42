@@ -1,5 +1,6 @@
 package io.anuke.ld42.ui;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import io.anuke.ucore.scene.ui.Dialog;
 import io.anuke.ld42.GameState;
@@ -28,6 +29,8 @@ public class PausedDialog extends Dialog{
         content().addButton("About", ui.about::show);
         content().row();
 
-        content().addButton("Quit", Gdx.app::exit);
+        if(Gdx.app.getType() != ApplicationType.WebGL){
+            content().addButton("Quit", Gdx.app::exit);
+        }
     }
 }

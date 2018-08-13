@@ -16,7 +16,7 @@ public class Vars{
 	public static boolean drawLights = true;
 
 	public static final int tileSize = 16;
-	public static final int raynum = 20;
+	public static final int raynum = 15;
 	public static final float shadowOpacity = 0.3f;
 	
 	public static String[] tutorialText = {

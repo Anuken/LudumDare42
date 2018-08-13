@@ -56,6 +56,8 @@ public class Control extends RendererModule{
 	private TiledMap map;
 	private TiledMapTileLayer wallLayer;
 	private TiledMapTileLayer floorLayer;
+	private boolean[][] occluded;
+	private boolean[][] solid;
 	private MapLayer objectLayer;
 
 	private Texture fog;
@@ -250,15 +252,20 @@ public class Control extends RendererModule{
 		fbo.begin();
 		Graphics.begin();
 
+		occluded = new boolean[wallLayer.getWidth()][wallLayer.getHeight()];
+		solid = new boolean[wallLayer.getWidth()][wallLayer.getHeight()];
+
 		Draw.color(Color.BLACK);
 		for(int x = 0; x < fbo.getWidth(); x++){
 			outer:
 			for(int y = 0; y < fbo.getHeight(); y++){
 				Cell cell = wallLayer.getCell(x, y);
+				solid[x][y] = cell!= null && cell.getTile().getProperties().containsKey("solid");
 				if(cell != null){
 					for(GridPoint2 p : Geometry.d4){
 						Cell f = wallLayer.getCell(x + p.x, y + p.y);
 						if(f == null){
+							occluded[x][y] = true;
 							continue outer;
 						}
 					}
@@ -391,7 +398,6 @@ public class Control extends RendererModule{
 
         clampCamera(tileSize*2f, tileSize*3, tileSize * floorLayer.getWidth() - tileSize*3.5f, tileSize * floorLayer.getHeight() - tileSize*2f);
 
-
         drawDefault();
 		if(drawLights){
 			rays.setCombinedMatrix(Core.camera);
@@ -441,15 +447,16 @@ public class Control extends RendererModule{
 		}
 
 		//draw wall shadows
+
 		for(int y = drawLine.length/2 - 1; y >= -drawLine.length/2; y --){
 			for(int x = -drawRangeX; x <= drawRangeX; x++){
 				int worldx = camx + x, worldy = camy + y;
 				Cell cell = wallLayer.getCell(worldx, worldy);
 				if(cell == null) continue;
 
-				if(!cell.getTile().getProperties().containsKey("solid")){
+				if(!solid[worldx][worldy]){
 					Draw.rect("shadow" + cell.getTile().getProperties().get("shadow", 16, Integer.class), worldx * tileSize, worldy * tileSize+2);
-				}else{
+				}else if(occluded[worldx][worldy]){
 
 					float t = tileSize / 2f;
 					float cx = worldx * tileSize, cy = worldy * tileSize + tileSize / 2f;
@@ -548,7 +555,7 @@ public class Control extends RendererModule{
 
 	@Override
 	public void resize(){
-		drawLine = new Array[(int)(8 + Core.camera.viewportHeight / tileSize)];
+		drawLine = new Array[(int)(6 + Core.camera.viewportHeight / tileSize)];
 		for(int i = 0; i < drawLine.length; i++){
 			drawLine[i] = new Array<>();
 		}

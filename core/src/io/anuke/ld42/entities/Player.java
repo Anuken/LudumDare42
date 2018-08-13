@@ -90,7 +90,7 @@ public class Player extends Spark{
             walktime = 0;
         }
 
-        if(shootTime > 0){
+        if(shootTime >= 0){
             shootTime -= Timers.delta();
         }
 

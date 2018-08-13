@@ -442,7 +442,7 @@ eikan default: &quot;Keep telling yourself that.&quot;
 aysa confused: &quot;Say, isn't it a little too late for Cavebeest to come out this far?&quot;
 eikan confused: &quot;It is a bit strange...&quot;
 aysa default: &quot;Maybe it just parted off from its group. They're not exactly the brightest creatures.&quot;
-aysa worried: &quot;Hey, Eikan, we should head back.&quot;
+aysa determined: &quot;Anyway, we should head back.&quot;
 eikan determined: &quot;You go on. I'll be there in a minute.&quot;
 aysa worried: &quot;...&quot;
 :blackscreen
