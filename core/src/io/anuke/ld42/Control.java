@@ -149,8 +149,8 @@ public class Control extends RendererModule{
 			MapProperties props = obj.getProperties();
 			if(props.containsKey("type")){
 				int x = (int)(((TiledMapTileMapObject)obj).getX()/tileSize);
-				int y =  (int)((((TiledMapTileMapObject)obj).getY())/tileSize);
-				triggers.add(new Trigger(props.get("type").equals("x") ? x : y, props.get("type").equals("x"), obj));
+				int y = (int)((((TiledMapTileMapObject)obj).getY())/tileSize);
+				triggers.add(new Trigger(!props.get("type").equals("x") ? x : y, props.get("type").equals("x"), obj));
 			}
 		}
 
