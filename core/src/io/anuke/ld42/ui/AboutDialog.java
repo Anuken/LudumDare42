@@ -12,7 +12,7 @@ public class AboutDialog extends Dialog{
         content().margin(10);
 
         for(String s : aboutText){
-            content().add(s);
+            content().add(s).growX().left();
             content().row();
         }
 

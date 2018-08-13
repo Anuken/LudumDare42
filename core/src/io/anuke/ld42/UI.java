@@ -21,7 +21,7 @@ public class UI extends SceneModule{
     public AboutDialog about;
     public TutorialDialog tutorial;
     public PausedDialog paused;
-    public GameOverDialog gameover;
+    public GameOverDialog win;
     public DialogBox dialog;
     public Intro intro;
 
@@ -38,7 +38,7 @@ public class UI extends SceneModule{
         about = new AboutDialog();
         tutorial = new TutorialDialog();
         paused = new PausedDialog();
-        gameover = new GameOverDialog();
+        win = new GameOverDialog();
 
         scene.table(table -> {
             float[] lastValue = {0};

@@ -25,6 +25,9 @@ public class PausedDialog extends Dialog{
         content().addButton("Controls", ui.keybind::show);
         content().row();
 
+        content().addButton("About", ui.about::show);
+        content().row();
+
         content().addButton("Quit", Gdx.app::exit);
     }
 }

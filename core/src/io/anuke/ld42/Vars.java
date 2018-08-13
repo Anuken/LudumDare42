@@ -1,5 +1,6 @@
 package io.anuke.ld42;
 
+import io.anuke.ld42.entities.Aysa;
 import io.anuke.ld42.entities.Player;
 import io.anuke.ld42.entities.traits.EnemyTrait;
 
@@ -8,9 +9,10 @@ public class Vars{
 	public static UI ui;
 
 	public static Player player;
+	public static Aysa aysa;
 	public static EnemyTrait enemy;
 
-	public static boolean debug = true;
+	public static boolean debug = false;
 	public static boolean drawLights = true;
 
 	public static final int tileSize = 16;
@@ -23,11 +25,12 @@ public class Vars{
 	};
 	
 	public static String[] aboutText = {
-		"Made by [crimson]Anuke[] for something.",
+		"Made by [sky]Anuke[], [lime]Epowerj[] and [crimson]Tux[] for Ludum Dare 42.",
 		"",
-		"Tools used:",
-		"- Some [lime]amazing[] tool #1",
-		"- Another [royal]cool[] tool #2",
-		"- Something [yellow]else[] #3"
+		"Resources used:",
+		"- Prose font, made by Raus",
+		"- LibGDX game framework",
+		"- Jukedeck.com for music",
+		"- Sound effects downloaded from some site I can't find anymore\n(whups)"
 	};
 }

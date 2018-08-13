@@ -4,6 +4,8 @@ import io.anuke.ld42.Vars;
 import io.anuke.ucore.core.Effects;
 import io.anuke.ucore.core.Timers;
 
+import static io.anuke.ld42.Vars.ui;
+
 public enum Command{
     tremors{
         public void run(){
@@ -15,7 +17,18 @@ public enum Command{
         public void run(){
             Timers.run(60f, () -> Vars.enemy.setActive(true));
         }
+    },
+    exit{
+        @Override
+        public void run(){
+            ui.win.show();
+        }
+    },
+    blackscreen{
+        public void run(){
+            Vars.control.black = true;
+        }
+
     };
-    public float duration = 60f;
     public abstract void run();
 }

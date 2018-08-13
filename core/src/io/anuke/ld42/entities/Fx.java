@@ -38,6 +38,28 @@ public class Fx{
 		Draw.reset();
 	}),
 
+	artihit = new Effect(20, e -> {
+		Draw.color(Palette.artifact);
+		Angles.randLenVectors(e.id, 10, e.fin() * 20f, (x, y) -> {
+			Fill.circle(x + e.x, y + e.y, e.fout()*4f);
+		});
+		Draw.reset();
+	}),
+
+	pillarup = new Effect(10, e -> {
+		Draw.color(Color.WHITE);
+		Lines.stroke( 2f * e.fout());
+		Lines.circle(e.x, e.y, 30f * e.fin());
+		Draw.reset();
+	}),
+
+	pillardown = new Effect(10, e -> {
+		Draw.color(Color.WHITE);
+		Lines.stroke( 2f * e.fin());
+		Lines.circle(e.x, e.y, 20f * e.fout());
+		Draw.reset();
+	}),
+
 	tentakill = new Effect(50, e -> {
 		Draw.color(Color.MAROON, Color.BLACK, e.fout());
 		Angles.randLenVectors(e.id, 20, e.fin() * 100f, (x, y) -> {

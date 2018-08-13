@@ -22,7 +22,7 @@ public class Aysa extends Spark{
 
     @Override
     public void update(){
-        if(enemy == null) return;
+        if(enemy == null || !(enemy instanceof CaveBeast)) return;
 
         if(Timers.get(this, "shoot", 40)){
             bullet(BulletType.aysaBullet, angleTo(enemy));
@@ -37,7 +37,7 @@ public class Aysa extends Spark{
 
         direction = movement.x > 0;
         walktime += Timers.delta();
-        move(movement.x, movement.y);
+        //move(movement.x, movement.y);
     }
 
     @Override

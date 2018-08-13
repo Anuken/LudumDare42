@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset name="default" tilewidth="16" tileheight="32" tilecount="13" columns="0">
+<tileset name="default" tilewidth="16" tileheight="32" tilecount="18" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
@@ -51,5 +51,23 @@
    <property name="shadow" type="int" value="8"/>
   </properties>
   <image width="16" height="16" source="../../assets-raw/sprites/tiles/ribcage.png"/>
+ </tile>
+ <tile id="15">
+  <properties>
+   <property name="solid" type="int" value="0"/>
+  </properties>
+  <image width="16" height="32" source="../../assets-raw/sprites/tiles/pillar.png"/>
+ </tile>
+ <tile id="16">
+  <image width="16" height="16" source="../../assets-raw/sprites/tiles/floor_green.png"/>
+ </tile>
+ <tile id="17">
+  <image width="16" height="16" source="../../assets-raw/sprites/tiles/floor_green_stone.png"/>
+ </tile>
+ <tile id="18">
+  <image width="16" height="16" source="../../assets-raw/sprites/tiles/floor_green_stone_verydirt.png"/>
+ </tile>
+ <tile id="20">
+  <image width="16" height="16" source="../../assets-raw/sprites/tiles/floor_green_stone_verydirt_second.png"/>
  </tile>
 </tileset>

@@ -1,16 +1,16 @@
 package io.anuke.ld42.ui;
 
-import io.anuke.ld42.Vars;
+import com.badlogic.gdx.Gdx;
 import io.anuke.ucore.scene.ui.Dialog;
 
 public class GameOverDialog extends Dialog{
 
     public GameOverDialog(){
-        super("Game Over", "dialog");
-        content().add("You're dead.");
-        buttons().addButton("Retry", () -> {
-            Vars.control.reset();
+        super("[ORANGE]Congratulations!", "dialog");
+        content().add("You've beaten the game!").pad(10);
+        buttons().addButton("Exit", () -> {
             hide();
-        }).size(200, 60);
+            Gdx.app.exit();
+        }).size(200, 60).pad(10);
     }
 }

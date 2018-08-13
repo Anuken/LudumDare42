@@ -21,6 +21,13 @@ public class Wraith extends Enemy{
     }
 
     @Override
+    public void onDeath(){
+        super.onDeath();
+
+        Effects.sound("scream", this);
+    }
+
+    @Override
     public Color lightColor(){
         return Palette.wraith;
     }
@@ -95,6 +102,6 @@ public class Wraith extends Enemy{
 
     @Override
     public float maxHealth(){
-        return phase2 ? 60 : 90;
+        return phase2 ? 70 : 90;
     }
 }

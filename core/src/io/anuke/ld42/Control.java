@@ -26,6 +26,7 @@ import io.anuke.ld42.entities.traits.EnemyTrait;
 import io.anuke.ld42.entities.traits.LayerTrait;
 import io.anuke.ld42.entities.traits.LayerTrait.Layer;
 import io.anuke.ld42.entities.traits.ShadowTrait;
+import io.anuke.ld42.graphics.Palette;
 import io.anuke.ld42.graphics.Shaders;
 import io.anuke.ld42.io.MapLoader;
 import io.anuke.ld42.ui.DialogEntry;
@@ -48,6 +49,8 @@ import io.anuke.ucore.util.*;
 import static io.anuke.ld42.Vars.*;
 
 public class Control extends RendererModule{
+    private static float limit = 240f;
+
 	private Array<Entity>[] drawLine = new Array[0];
 
 	private TiledMap map;
@@ -69,9 +72,15 @@ public class Control extends RendererModule{
     public RayHandler rays;
 	private PointLight light;
 
+	private float limitx, limity;
 	private Array<Trigger> triggers = new Array<>();
 	private ObjectMap<String, GridPoint2> markers = new ObjectMap<>();
 	private Class<?> lastEnemy;
+
+	public boolean black;
+
+    private String[] noises = {"waterdrop", "waterdrop2", "switch1"};
+    private double noiseChance = 0.003;
 
 	public Control(){
 
@@ -87,6 +96,8 @@ public class Control extends RendererModule{
 			"shoot", Input.MOUSE_LEFT,
 			"pause", Input.ESCAPE
 		);
+
+		Musics.setFadeTime(150f);
 
 		Effects.setShakeFalloff(40000);
 		
@@ -108,8 +119,14 @@ public class Control extends RendererModule{
 			entity.add();
 		});
 
-		Musics.load("sine.ogg");
+		Sounds.load("death.mp3", "distortroar.mp3", "growl1.mp3", "hurt.mp3", "pickup.wav", "respawn.mp3", "scream.mp3", "shoot.mp3", "slash.mp3", "slash2.mp3", "switch1.mp3", "tentadie.wav", "waterdrop.mp3", "waterdrop2.mp3");
+
+		Musics.load("sine.ogg", "ambient.ogg", "artifact.mp3", "tenta.mp3", "wraith.mp3");
 		Musics.createTracks("intro", "sine");
+        Musics.createTracks("ambient", "ambient");
+        Musics.createTracks("artifact", "artifact");
+        Musics.createTracks("tenta", "tenta");
+        Musics.createTracks("wraith", "wraith");
 
 		fog = new Texture("sprites/fog.png");
 		fog.setWrap(TextureWrap.MirroredRepeat, TextureWrap.MirroredRepeat);
@@ -130,6 +147,18 @@ public class Control extends RendererModule{
 		light.setDistance(100);
 		light.add(rays);
 	}
+
+	public void wall(int x, int y, int id){
+	    if(id == 0 && wallLayer.getCell(x, y) != null){
+	        wallLayer.setCell(x, y, null);
+            Effects.effect(Fx.pillardown, x * tileSize, y*tileSize + tileSize/2f);
+        }else if(id != 0 && wallLayer.getCell(x, y) == null){
+            Cell cell = new Cell();
+            cell.setTile(map.getTileSets().getTile(id));
+            wallLayer.setCell(x, y, cell);
+            Effects.effect(Fx.pillarup, x * tileSize, y*tileSize + tileSize/2f);
+        }
+    }
 
     public void flash(Color color){
         flashTime = flashDuration;
@@ -178,25 +207,13 @@ public class Control extends RendererModule{
 			int y = (int)((((TiledMapTileMapObject)obj).getY())/tileSize);
 
 			if(props.containsKey("type") && props.containsKey("text")){
-				Array<DialogEntry> entries = new Array<>();
-				String[] dialog = ((String)props.get("text")).split("\n");
-				for(String s : dialog){
-					if(s.startsWith(":")){
-						entries.add(new DialogEntry(Command.valueOf(s.substring(1))));
-						continue;
-					}
-					String facepic = s.substring(0, s.indexOf(':'));
-					String dname = Strings.capitalize(facepic.substring(0, facepic.indexOf(' ')));
-					String text = s.substring(s.indexOf(": ") + 3);
-					text = text.substring(0, text.length()-1);
-					entries.add(new DialogEntry(dname, facepic, text));
-				}
+				Array<DialogEntry> entries = getEntries((String)props.get("text"));
 
 				Class<?> enemyClass = null;
 				try{
 				    enemyClass = ClassReflection.forName("io.anuke.ld42.entities." + props.get("enemy"));
-                    EnemyTrait e = (EnemyTrait)enemyClass.newInstance();
                 }catch(Exception e){}
+
 
 				String type = (String) props.get("type");
 				if(type.equals("x")){
@@ -224,8 +241,8 @@ public class Control extends RendererModule{
 
 		player.set(markers.get(start).x * tileSize, markers.get(start).y * tileSize);
 
-		Aysa aysa = new Aysa();
-		aysa.set(player.x, player.y - 50);
+		aysa = new Aysa();
+		aysa.set(markers.get("spawnpoint_aysa").x * tileSize, markers.get("spawnpoint_aysa").y * tileSize);
 		aysa.add();
 
 		fbo = new FrameBuffer(Format.RGBA8888, wallLayer.getWidth(), wallLayer.getHeight(), false);
@@ -255,21 +272,54 @@ public class Control extends RendererModule{
 
 		EntityPhysics.initPhysics(0, 0, wallLayer.getWidth() * tileSize, wallLayer.getHeight() * tileSize);
 	}
+
+	public void displayDeath(EnemyTrait enemy){
+		String name = ClassReflection.getSimpleName(enemy.getClass());
+		Array<DialogEntry> arr = getEntries((String)objectLayer.getObjects().get(name).getProperties().get("text"));
+		Timers.run(10f, () -> ui.dialog.display(arr));
+	}
+
+	Array<DialogEntry> getEntries(String raw){
+		Array<DialogEntry> entries = new Array<>();
+		String[] dialog = raw.split("\n");
+		for(String s : dialog){
+			if(s.isEmpty()) continue;
+			if(s.startsWith(":")){
+				entries.add(new DialogEntry(Command.valueOf(s.substring(1))));
+				continue;
+			}
+			String facepic = s.substring(0, s.indexOf(':'));
+			String dname = Strings.capitalize(facepic.substring(0, facepic.indexOf(' ')));
+			String text = s.substring(s.indexOf(": ") + 3);
+			text = text.substring(0, text.length()-1);
+			entries.add(new DialogEntry(dname, facepic, text));
+		}
+		return entries;
+	}
 	
 	@Override
 	public void update(){
 		light.setPosition(player.x, player.y);
 
-        rays.setAmbientLight(Hue.lightness(0.8f - player.y/3500f));
+        rays.setAmbientLight(Hue.lightness(0.8f - player.y/3000f));
+
+        if(GameState.is(State.playing)){
+        	if(enemy != null){
+				if(enemy instanceof Artifact){
+					Musics.playTracks("artifact");
+				}else if(enemy instanceof CaveBeast){
+					Musics.playTracks("tenta");
+				}else{
+					Musics.playTracks("wraith");
+				}
+			}else{
+				Musics.playTracks("ambient");
+			}
+        }
 
 		if(Inputs.keyTap("next")){
 			ui.dialog.next();
 		}
-		
-		//TODO remove
-		if(Inputs.keyDown(Input.ESCAPE)){
-			Gdx.app.exit();
-        }
 
         if(enemy != null && enemy.isDead()){
 		    enemy = null;
@@ -278,16 +328,18 @@ public class Control extends RendererModule{
         int px = (int)(player.x / tileSize), py = (int)(player.y / tileSize);
 
         for(Trigger trigger : triggers){
-			if((!trigger.x && trigger.pos == px) || (trigger.x && trigger.pos == py)){
+			if(enemy == null && (!trigger.x && trigger.pos == px) || (trigger.x && trigger.pos == py)){
 			    if(trigger.enemy != null){
 			        lastEnemy = trigger.enemy;
 			        for(Entity e : Entities.all()){
 			            if(e.getClass() == trigger.enemy){
 			                enemy = (EnemyTrait) e;
+			                limitx = enemy.getX();
+			                limity = enemy.getY();
 			                break;
                         }
                     }
-                    Command.wake.run();
+                    if(debug) Command.wake.run();
                 }
 				if(!debug) ui.dialog.display(trigger.dialog);
 				triggers.removeValue(trigger, true);
@@ -298,10 +350,14 @@ public class Control extends RendererModule{
         player.x = Mathf.clamp(player.x, tileSize*2f, tileSize * floorLayer.getWidth() - tileSize*2f);
 		player.y = Mathf.clamp(player.y, tileSize*3f, tileSize * floorLayer.getHeight() - tileSize*2f);
 
-		clampCamera(tileSize*2f, tileSize*3, tileSize * floorLayer.getWidth() - tileSize*2.5f, tileSize * floorLayer.getHeight() - tileSize*2f);
 		updateShake();
 
 		if(GameState.is(State.playing)){
+            if(Mathf.chance(noiseChance * Timers.delta())){
+                Tmp.v1.setToRandomDirection().setLength(Mathf.random(10f, 200f));
+                Sounds.play(noises[Mathf.random(0, noises.length-1)], Mathf.random(0.6f));
+            }
+
 			Entities.update();
 			Timers.update();
 			
@@ -316,14 +372,27 @@ public class Control extends RendererModule{
 			}
 		}
 
-		smoothCamera((int)player.x, (int)player.y, 0.1f);
-		limitCamera(5f, (int)player.x, (int)player.y);
+        if(enemy != null){
+            Tmp.v1.set(player.x, player.y).sub(limitx, limity).limit(limit);
+            player.x = limitx + Tmp.v1.x;
+            player.y = limity + Tmp.v1.y;
+        }
+
+        if(!ui.dialog.isAysa()){
+			smoothCamera((int) player.x, (int) player.y, 0.1f);
+			limitCamera(5f, (int) player.x, (int) player.y);
+		}else{
+			smoothCamera(aysa.x, aysa.y, 0.1f);
+		}
 
 		float pcx = Core.camera.position.x, pcy = Core.camera.position.y;
 		Core.camera.position.x = (int)Core.camera.position.x;
 		Core.camera.position.y = (int)Core.camera.position.y;
 
-		drawDefault();
+        clampCamera(tileSize*2f, tileSize*3, tileSize * floorLayer.getWidth() - tileSize*3.5f, tileSize * floorLayer.getHeight() - tileSize*2f);
+
+
+        drawDefault();
 		if(drawLights){
 			rays.setCombinedMatrix(Core.camera);
 			rays.updateAndRender();
@@ -384,12 +453,20 @@ public class Control extends RendererModule{
 
 					float t = tileSize / 2f;
 					float cx = worldx * tileSize, cy = worldy * tileSize + tileSize / 2f;
+
+					float ang = Mathf.atan2(player.x - cx, player.y - cy) + 180f;
+					float dst = Mathf.dst(player.x - cx, player.y - cy);
+					float len = 14f + Mathf.clamp(dst/3f, 0, 60);
+					Core.batch.draw(Draw.region("shadow"), cx - 5, cy - 9, 5, 9, len, 18f, 1f, 1f, ang);
+					/*
+
 					float mv = 20f;
 					float sx = 1, sy = 2f;
 					float x1 = cx + t, y1 = cy + t, x2 = cx - t, y2 = cy - t,
 					x3 = x2 - mv * sx, y3 = y2 + mv * sy, x4 = cx - t - mv * sx, y4 = cy + t + mv * sy, x5 = x1 - mv * sx, y5 = y1 + mv * sy;
 					Fill.quad(x1, y1, x2, y2, x3, y3, x4, y4);
 					Fill.tri(x1, y1, x4, y4, x5, y5);
+					*/
 				}
 			}
 		}
@@ -399,6 +476,13 @@ public class Control extends RendererModule{
 		Draw.color();
 
 		drawFog();
+
+		if(enemy != null){
+			Lines.stroke(1f);
+			Draw.color(Color.DARK_GRAY, Palette.eikan, Mathf.absin(Timers.time(), 20f, 1f));
+			Lines.poly(limitx, limity, 100, limit);
+			Draw.reset();
+		}
 
 		//draw walls
 		for(int y = drawLine.length/2 - 1; y >= -drawLine.length/2; y --){
@@ -451,6 +535,12 @@ public class Control extends RendererModule{
             timeScale = Mathf.lerp(timeScale, 1f, Gdx.graphics.getDeltaTime() * 60f * 0.01f);
         }else{
             timeScale = Mathf.lerp(timeScale, 0f, Gdx.graphics.getDeltaTime() * 60f * 0.2f);
+        }
+
+        if(black){
+		    Draw.color(Color.BLACK);
+		    Fill.crect(Core.camera.position.x, Core.camera.position.y, Core.camera.viewportWidth, Core.camera.viewportHeight);
+		    Draw.color();
         }
 
         if(GameState.is(State.intro)){

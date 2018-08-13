@@ -2,6 +2,7 @@ package io.anuke.ld42.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import io.anuke.ucore.core.Effects;
+import io.anuke.ucore.core.Sounds;
 import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.graphics.Fill;
@@ -42,13 +43,24 @@ public class CaveBeast extends Enemy{
     }
 
     @Override
+    public Color lightColor(){
+        return Color.MAROON;
+    }
+
+    @Override
+    public float lightRadius(){
+        return 600f;
+    }
+
+    @Override
     public void onDeath(){
-        control.flash(Color.MAROON);
-        remove();
+        super.onDeath();
 
         for(int i = 0; i < 4; i++){
             Timers.run(i*10, () -> Effects.effect(Fx.tentakill, x + Mathf.range(20f), y + Mathf.range(20f)));
         }
+
+        Sounds.play("distortroar");
     }
 
     @Override

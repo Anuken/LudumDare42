@@ -81,6 +81,7 @@ eclipseWtpFacet.doLast{
 task addSource {
     doLast {
         sourceSets.main.compileClasspath += files(project(':core').sourceSets.main.allJava.srcDirs)
+        sourceSets.main.compileClasspath += files(project(':uCore').sourceSets.main.allJava.srcDirs)
     }
 }
 

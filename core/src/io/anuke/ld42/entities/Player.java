@@ -3,6 +3,7 @@ package io.anuke.ld42.entities;
 import io.anuke.ld42.entities.traits.EnemyTrait;
 import io.anuke.ucore.core.Effects;
 import io.anuke.ucore.core.Inputs;
+import io.anuke.ucore.core.Sounds;
 import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.entities.trait.SolidTrait;
 import io.anuke.ucore.graphics.Draw;
@@ -14,9 +15,6 @@ import static io.anuke.ld42.Vars.ui;
 public class Player extends Spark{
     private float speed = 3f;
 
-    private static final int blinkPower = 20;
-    private static final float blinkCooldown = 60f;
-    private float blinkCooldownTimer = 0f;
     private float shootTime = -1f;
 
     public Player(){
@@ -33,11 +31,13 @@ public class Player extends Spark{
     @Override
     public void onDeath(){
         control.reset();
+        Sounds.play("death");
     }
 
     @Override
     public void onHit(SolidTrait entity){
         control.hitTime = 10f;
+        Sounds.play("hurt");
     }
 
     @Override
@@ -99,6 +99,7 @@ public class Player extends Spark{
                 shootTime = 20f;
                 for(int i = 0; i < 3; i++){
                     Timers.run(i*3, () -> {
+                        Sounds.play("shoot");
                         bullet(BulletType.playerBullet, Angles.mouseAngle(x, y + height));
                         Effects.effect(Fx.playershoot, x, y + height);
                     });
@@ -108,18 +109,6 @@ public class Player extends Spark{
             float ang = Angles.mouseAngle(x, y + height);
 
             direction = !(ang > 90 && ang < 270);
-        }
-
-        // blink - tap shift while moving to do a quick dash in that direction
-
-        if(blinkCooldownTimer > 0){ // if timer is running
-            blinkCooldownTimer -= Timers.delta();
-        }
-
-        //curently disabled
-        if(Inputs.keyTap("dash") && !movement.isZero() && blinkCooldownTimer <= 0){ // if moving and pressing shift and cooldown is done
-        //    move(movement.x  * blinkPower, movement.y * blinkPower);
-            blinkCooldownTimer = blinkCooldown;
         }
 
         move(movement.x, movement.y);

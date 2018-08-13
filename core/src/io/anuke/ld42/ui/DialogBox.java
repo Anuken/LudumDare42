@@ -34,6 +34,10 @@ public class DialogBox{
         }).visible(() -> text != null && face != null && character != null);
     }
 
+    public boolean isAysa(){
+        return character != null && character.equals("Aysa");
+    }
+
     public boolean active(){
         return dialog.size > 0 || text != null;
     }
