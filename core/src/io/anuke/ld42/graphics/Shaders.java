@@ -5,6 +5,7 @@ import io.anuke.ucore.graphics.Shader;
 
 public class Shaders{
     public static final PlayerShader player = new PlayerShader();
+    public static final Shader fog = new Shader("fog", "default");
 
     public static class PlayerShader extends Shader{
         public Color color = new Color();

@@ -2,9 +2,11 @@ package io.anuke.ld42;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
@@ -12,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
+import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Sort;
@@ -20,6 +23,7 @@ import io.anuke.ld42.entities.*;
 import io.anuke.ld42.entities.traits.LayerTrait;
 import io.anuke.ld42.entities.traits.LayerTrait.Layer;
 import io.anuke.ld42.entities.traits.ShadowTrait;
+import io.anuke.ld42.graphics.Shaders;
 import io.anuke.ld42.io.MapLoader;
 import io.anuke.ld42.ui.DialogEntry;
 import io.anuke.ucore.core.*;
@@ -31,10 +35,7 @@ import io.anuke.ucore.entities.impl.EffectEntity;
 import io.anuke.ucore.entities.trait.DrawTrait;
 import io.anuke.ucore.entities.trait.Entity;
 import io.anuke.ucore.entities.trait.SolidTrait;
-import io.anuke.ucore.graphics.Draw;
-import io.anuke.ucore.graphics.Fill;
-import io.anuke.ucore.graphics.Lines;
-import io.anuke.ucore.graphics.Surface;
+import io.anuke.ucore.graphics.*;
 import io.anuke.ucore.input.Input;
 import io.anuke.ucore.lights.PointLight;
 import io.anuke.ucore.lights.RayHandler;
@@ -52,6 +53,7 @@ public class Control extends RendererModule{
 	private MapLayer objectLayer;
 
 	private Texture fog;
+	private FrameBuffer fbo;
 
     public Surface effects;
 	public float hitTime;
@@ -117,7 +119,7 @@ public class Control extends RendererModule{
 		loadMap("map");
 
 		rays = new RayHandler();
-		rays.setAmbientLight(Color.WHITE);
+		rays.setAmbientLight(Hue.lightness(0.7f));
 
 		light = new PointLight(rays, 50);
 		light.setColor(Color.WHITE);
@@ -163,6 +165,32 @@ public class Control extends RendererModule{
 		c.add();
 
 		enemy = c;
+
+		fbo = new FrameBuffer(Format.RGBA8888, wallLayer.getWidth(), wallLayer.getHeight(), false);
+		Core.batch.getProjectionMatrix().setToOrtho2D(0, 0, fbo.getWidth(), fbo.getHeight());
+		fbo.begin();
+		Graphics.begin();
+
+
+		Draw.color(Color.BLACK);
+		for(int x = 0; x < fbo.getWidth(); x++){
+			outer:
+			for(int y = 0; y < fbo.getHeight(); y++){
+				Cell cell = wallLayer.getCell(x, y);
+				if(cell != null){
+					for(GridPoint2 p : Geometry.d4){
+						Cell f = wallLayer.getCell(x + p.x, y + p.y);
+						if(f == null){
+							continue outer;
+						}
+					}
+					Fill.crect(x, fbo.getHeight() - 1 - y, 1, 1);
+				}
+			}
+		}
+		Draw.color();
+		Graphics.end();
+		fbo.end();
 
 		EntityPhysics.initPhysics(0, 0, wallLayer.getWidth() * tileSize, wallLayer.getHeight() * tileSize);
 	}
@@ -212,12 +240,12 @@ public class Control extends RendererModule{
 			}
 		}
 
-        player.x = Mathf.clamp(player.x, 0, tileSize * floorLayer.getWidth());
-		player.y = Mathf.clamp(player.y, 16, tileSize * floorLayer.getHeight());
+        player.x = Mathf.clamp(player.x, tileSize*2f, tileSize * floorLayer.getWidth() - tileSize*2f);
+		player.y = Mathf.clamp(player.y, tileSize*3f, tileSize * floorLayer.getHeight() - tileSize*2f);
 
 		smoothCamera(player.x, player.y, 0.1f);
 		limitCamera(6f, player.x, player.y);
-		clampCamera(0, 16, tileSize * floorLayer.getWidth(), tileSize * floorLayer.getHeight());
+		clampCamera(tileSize*2f, tileSize*3, tileSize * floorLayer.getWidth() - tileSize*2.5f, tileSize * floorLayer.getHeight() - tileSize*2f);
 		updateShake();
 
 		if(GameState.is(State.playing)){
@@ -287,14 +315,19 @@ public class Control extends RendererModule{
 				Cell cell = wallLayer.getCell(worldx, worldy);
 				if(cell == null) continue;
 
-				float t = tileSize/2f;
-				float cx = worldx*tileSize, cy = worldy*tileSize + tileSize/2f;
-				float mv = 20f;
-				float sx = 1, sy = 2f;
-				float x1 = cx + t, y1 = cy + t, x2 = cx - t, y2 = cy - t,
-				x3 = x2 - mv*sx, y3 = y2 + mv*sy, x4 = cx - t - mv*sx, y4 = cy + t + mv*sy, x5 = x1 - mv*sx, y5 = y1 + mv*sy;
-				Fill.quad(x1, y1, x2, y2, x3, y3, x4, y4);
-				Fill.tri(x1, y1, x4, y4, x5, y5);
+				if(cell.getTile().getProperties().containsKey("shadow")){
+					Draw.rect("shadow16", worldx * tileSize, worldy * tileSize+2);
+				}else{
+
+					float t = tileSize / 2f;
+					float cx = worldx * tileSize, cy = worldy * tileSize + tileSize / 2f;
+					float mv = 20f;
+					float sx = 1, sy = 2f;
+					float x1 = cx + t, y1 = cy + t, x2 = cx - t, y2 = cy - t,
+					x3 = x2 - mv * sx, y3 = y2 + mv * sy, x4 = cx - t - mv * sx, y4 = cy + t + mv * sy, x5 = x1 - mv * sx, y5 = y1 + mv * sy;
+					Fill.quad(x1, y1, x2, y2, x3, y3, x4, y4);
+					Fill.tri(x1, y1, x4, y4, x5, y5);
+				}
 			}
 		}
 
@@ -320,6 +353,10 @@ public class Control extends RendererModule{
 				Draw.rect(cell.getTile().getTextureRegion(), worldx * tileSize, worldy * tileSize + cell.getTile().getTextureRegion().getRegionHeight()/2f);
 			}
 		}
+
+		Graphics.shader(Shaders.fog);
+		Core.batch.draw(fbo.getColorBufferTexture(), -tileSize/2f, tileSize, fbo.getWidth() * tileSize, fbo.getHeight() * tileSize);
+		Graphics.shader();
 
 		//clear draw lines
 		for(int i = 0; i < drawLine.length; i++){
@@ -366,6 +403,7 @@ public class Control extends RendererModule{
 		}
 
 		rays.resizeFBO(Gdx.graphics.getWidth()/Core.cameraScale, Gdx.graphics.getHeight()/Core.cameraScale);
+		rays.pixelate();
 	}
 
 	Layer getLayer(Entity entity){

@@ -17,7 +17,7 @@ public class Player extends Spark{
     private static final int blinkPower = 20;
     private static final float blinkCooldown = 60f;
     private float blinkCooldownTimer = 0f;
-    private float shootTime = 0f;
+    private float shootTime = -1f;
 
     public Player(){
         hitboxTile.set(0, 3, 12, 6);

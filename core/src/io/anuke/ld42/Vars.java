@@ -11,7 +11,7 @@ public class Vars{
 	public static EnemyTrait enemy;
 
 	public static boolean debug = true;
-	public static boolean drawLights = false;
+	public static boolean drawLights = true;
 
 	public static final int tileSize = 16;
 	public static final float shadowOpacity = 0.3f;
