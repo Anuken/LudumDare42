@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import io.anuke.ld42.entities.traits.EnemyTrait;
 import io.anuke.ucore.core.Effects;
 import io.anuke.ucore.core.Timers;
+import io.anuke.ucore.entities.trait.SolidTrait;
 import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.graphics.Fill;
 import io.anuke.ucore.graphics.Lines;
@@ -20,11 +21,13 @@ public class CaveCreature extends Spark implements EnemyTrait{
     private int tentacles = 6;
     private float len = 6f;
 
-    boolean phase2;
+    private boolean phase2;
 
-    float lerpto;
-    float[][] values;
-    float silenceTime;
+    private float lerpto;
+    private float[][] values;
+    private float silenceTime;
+
+    public boolean shooting = false;
 
     public CaveCreature(){
         hitbox.setSize(30f);
@@ -40,6 +43,16 @@ public class CaveCreature extends Spark implements EnemyTrait{
         for(int i = 0; i < tentacles; i++){
             Arrays.fill(values[i], (float)i / tentacles * 360f);
         }
+    }
+
+    @Override
+    public boolean collides(SolidTrait other){
+        return shooting && super.collides(other);
+    }
+
+    @Override
+    public boolean isActive(){
+        return shooting;
     }
 
     @Override
@@ -74,6 +87,8 @@ public class CaveCreature extends Spark implements EnemyTrait{
 
     @Override
     public void update(){
+        if(!shooting) return;
+
         if(!phase2 && Timers.get(this, "shoot2", 220)){
             for(int i = 0; i < 4; i++){
                 bullet(BulletType.tentacid, angleTo(player) + Mathf.range(20));

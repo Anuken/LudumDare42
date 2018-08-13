@@ -32,9 +32,8 @@ public class Player extends Spark{
 
     @Override
     public void onDeath(){
-        Timers.run(0f, this::heal);
-        //ui.gameover.show();
-        //control.reset();
+        //Timers.run(0f, this::heal);
+        control.reset();
     }
 
     @Override

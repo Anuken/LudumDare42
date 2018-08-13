@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="16" tileheight="16" infinite="0" nextobjectid="8">
+<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="16" tileheight="16" infinite="0" nextobjectid="10">
  <tileset firstgid="1" source="default.tsx"/>
  <layer name="floor" width="100" height="50">
   <data encoding="csv">
@@ -126,9 +126,12 @@ eikan determined: &quot;Come on, let's check it out.&quot;</property>
     <property name="text">eikan surprised: &quot;How did you even...&quot;
 aysa annoyed: &quot;Yeah, yeah. I'll explain later.&quot;
 aysa determined: &quot;We can't let it come any closer to the sanctum. Let's go.&quot;
-eikan annoyed: &quot;And Maos was just about to give me a raise too...&quot;</property>
+eikan annoyed: &quot;And Maos was just about to give me a raise too...&quot;
+:wakeCaveBeast</property>
     <property name="type" value="y"/>
    </properties>
   </object>
+  <object id="8" name="cavebeast" gid="5" x="1184" y="368" width="16" height="16"/>
+  <object id="9" name="checkpoint" gid="5" x="1072" y="448" width="16" height="16"/>
  </objectgroup>
 </map>

@@ -17,6 +17,7 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Sort;
 import io.anuke.ld42.GameState.State;
 import io.anuke.ld42.entities.*;
@@ -67,6 +68,7 @@ public class Control extends RendererModule{
 	private PointLight light;
 
 	private Array<Trigger> triggers = new Array<>();
+	private ObjectMap<String, GridPoint2> markers = new ObjectMap<>();
 
 	public Control(){
 
@@ -133,7 +135,22 @@ public class Control extends RendererModule{
     }
 
 	public void reset(){
-		player.heal();
+		Timers.run(1f, () -> {
+			flash(Color.SCARLET);
+			for(Entity entity : Entities.all()){
+				if(entity instanceof Bullet){
+					entity.remove();
+				}
+			}
+			enemy.remove();
+			CaveCreature c = new CaveCreature();
+			c.set(enemy.getX(), enemy.getY());
+			c.add();
+			enemy = c;
+			player.set(markers.get("checkpoint").x * tileSize, markers.get("checkpoint").y * tileSize);
+			player.heal();
+			Command.wakeCaveBeast.run();
+		});
 	    //TODO reset game state
 	}
 
@@ -147,10 +164,12 @@ public class Control extends RendererModule{
 
 		for(MapObject obj : objectLayer.getObjects()){
 			MapProperties props = obj.getProperties();
+			int x = (int)(((TiledMapTileMapObject)obj).getX()/tileSize);
+			int y = (int)((((TiledMapTileMapObject)obj).getY())/tileSize);
 			if(props.containsKey("type")){
-				int x = (int)(((TiledMapTileMapObject)obj).getX()/tileSize);
-				int y = (int)((((TiledMapTileMapObject)obj).getY())/tileSize);
 				triggers.add(new Trigger(!props.get("type").equals("x") ? x : y, props.get("type").equals("x"), obj));
+			}else{
+				markers.put(obj.getName(), new GridPoint2(x, y));
 			}
 		}
 
@@ -161,7 +180,7 @@ public class Control extends RendererModule{
 		aysa.add();
 
 		CaveCreature c = new CaveCreature();
-		c.set(floorLayer.getWidth() * tileSize/2f, floorLayer.getHeight() * tileSize/2f);
+		c.set(markers.get("cavebeast").x * tileSize, markers.get("cavebeast").y * tileSize);
 		c.add();
 
 		enemy = c;

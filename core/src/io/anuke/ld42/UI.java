@@ -42,6 +42,7 @@ public class UI extends SceneModule{
 
         scene.table(table -> {
             float[] lastValue = {0};
+            float[] trns = {0};
             float[] hlerp = {0};
 
             table.bottom();
@@ -59,7 +60,7 @@ public class UI extends SceneModule{
                     Draw.crect("bar", x, y, w * hlerp[0], h);
                 }).size(500, 30);
             });
-        }).visible(() -> enemy != null && !GameState.is(State.intro));
+        }).visible(() -> enemy != null && enemy.isActive() && !GameState.is(State.intro));
 
         dialog = new DialogBox();
 
