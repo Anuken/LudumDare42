@@ -407,7 +407,7 @@ eikan annoyed: &quot;Great. Where's she gone off to this time?&quot;</property>
   </object>
   <object id="8" name="Wraith" gid="5" x="1184" y="2608" width="16" height="16">
    <properties>
-    <property name="text">Eikan (confused): &quot;Wraiths?...&quot;
+    <property name="text">eikan confused: &quot;Wraiths?...&quot;
 </property>
    </properties>
   </object>
@@ -425,7 +425,11 @@ eikan annoyed: &quot;Great. Where's she gone off to this time?&quot;</property>
 aysa sweatdrop: &quot;Yeah, about that...&quot;
 eikan annoyed: &quot;What did you do this time?&quot;
 :tremors
-eikan casual: &quot;Come on, let's check it out.&quot;
+aysa sweatdrop: &quot;Well...&quot;
+eikan surprised: &quot;How did you even...&quot;
+aysa annoyed: &quot;Yeah, yeah. I'll explain later.&quot;
+aysa determined: &quot;We can't let it come any closer to the sanctum. Let's go.&quot;
+eikan annoyed: &quot;And Maos was just about to give me a raise too...&quot;
 :wake</property>
     <property name="type" value="x"/>
    </properties>
@@ -434,16 +438,16 @@ eikan casual: &quot;Come on, let's check it out.&quot;
    <properties>
     <property name="text">eikan smug: &quot;I must say, you've gotten pretty good at this. Maybe you'll even beat me one day.&quot;
 aysa smug: &quot;That's hardly an accomplishment.&quot;
-eikan casual: &quot;Keep telling yourself that.&quot;
+eikan default: &quot;Keep telling yourself that.&quot;
 aysa confused: &quot;Say, isn't it a little too late for Cavebeest to come out this far?&quot;
 eikan confused: &quot;It is a bit strange...&quot;
-aysa casual: &quot;Maybe it just parted off from its group. They're not exactly the brightest creatures.&quot;
+aysa default: &quot;Maybe it just parted off from its group. They're not exactly the brightest creatures.&quot;
 aysa worried: &quot;Hey, Eikan, we should head back.&quot;
 eikan determined: &quot;You go on. I'll be there in a minute.&quot;
 aysa worried: &quot;...&quot;
 :blackscreen
 eikan determined: &quot;Not the brightest, no, but a crystal core would be a pretty good reason to come out here...&quot;
-eikan shocked: &quot;..!&quot;
+eikan suffering: &quot;..!&quot;
 :exit</property>
    </properties>
   </object>

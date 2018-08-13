@@ -119,7 +119,7 @@ public class Control extends RendererModule{
 			entity.add();
 		});
 
-		Sounds.load("death.mp3", "distortroar.mp3", "growl1.mp3", "hurt.mp3", "pickup.wav", "respawn.mp3", "scream.mp3", "shoot.mp3", "slash.mp3", "slash2.mp3", "switch1.mp3", "tentadie.wav", "waterdrop.mp3", "waterdrop2.mp3");
+		Sounds.load("blobdie.mp3", "death.mp3", "distortroar.mp3", "growl1.mp3", "hurt.mp3", "pickup.wav", "respawn.mp3", "scream.mp3", "shoot.mp3", "slash.mp3", "slash2.mp3", "switch1.mp3", "tentadie.wav", "waterdrop.mp3", "waterdrop2.mp3");
 
 		Musics.load("sine.ogg", "ambient.ogg", "artifact.mp3", "tenta.mp3", "wraith.mp3");
 		Musics.createTracks("intro", "sine");
@@ -177,7 +177,7 @@ public class Control extends RendererModule{
 
 			try{
                 String checkpoint = ClassReflection.getSimpleName(lastEnemy);
-			    EnemyTrait e = (EnemyTrait) lastEnemy.newInstance();
+			    EnemyTrait e = (EnemyTrait) ClassReflection.newInstance(lastEnemy);
 			    e.set(markers.get(checkpoint).x * tileSize, markers.get(checkpoint).y * tileSize);
 			    e.add();
 			    enemy = e;
@@ -228,7 +228,7 @@ public class Control extends RendererModule{
 			if(obj.getName() != null){
                 try{
                     Class<?> enemyClass = ClassReflection.forName("io.anuke.ld42.entities." + obj.getName());
-                    EnemyTrait e = (EnemyTrait)enemyClass.newInstance();
+                    EnemyTrait e = (EnemyTrait)ClassReflection.newInstance(enemyClass);
                     e.setActive(false);
                     e.set(x * tileSize, y * tileSize);
                     e.add();
@@ -454,11 +454,10 @@ public class Control extends RendererModule{
 					float t = tileSize / 2f;
 					float cx = worldx * tileSize, cy = worldy * tileSize + tileSize / 2f;
 
-					float ang = Mathf.atan2(player.x - cx, player.y - cy) + 180f;
-					float dst = Mathf.dst(player.x - cx, player.y - cy);
-					float len = 14f + Mathf.clamp(dst/3f, 0, 60);
-					Core.batch.draw(Draw.region("shadow"), cx - 5, cy - 9, 5, 9, len, 18f, 1f, 1f, ang);
-					/*
+					//float ang = Mathf.atan2(player.x - cx, player.y - cy) + 180f;
+					//float dst = Mathf.dst(player.x - cx, player.y - cy);
+					//float len = 14f + Mathf.clamp(dst/3f, 0, 60);
+					//Core.batch.draw(Draw.region("shadow"), cx - 5, cy - 9, 5, 9, len, 18f, 1f, 1f, ang);
 
 					float mv = 20f;
 					float sx = 1, sy = 2f;
@@ -466,7 +465,6 @@ public class Control extends RendererModule{
 					x3 = x2 - mv * sx, y3 = y2 + mv * sy, x4 = cx - t - mv * sx, y4 = cy + t + mv * sy, x5 = x1 - mv * sx, y5 = y1 + mv * sy;
 					Fill.quad(x1, y1, x2, y2, x3, y3, x4, y4);
 					Fill.tri(x1, y1, x4, y4, x5, y5);
-					*/
 				}
 			}
 		}
@@ -539,7 +537,7 @@ public class Control extends RendererModule{
 
         if(black){
 		    Draw.color(Color.BLACK);
-		    Fill.crect(Core.camera.position.x, Core.camera.position.y, Core.camera.viewportWidth, Core.camera.viewportHeight);
+		    Fill.rect(Core.camera.position.x, Core.camera.position.y, Core.camera.viewportWidth, Core.camera.viewportHeight);
 		    Draw.color();
         }
 
