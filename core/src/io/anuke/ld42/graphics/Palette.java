@@ -6,5 +6,7 @@ public class Palette{
     public static final Color
 
     aysa = Color.valueOf("e8775d"),
-    eikan = Color.valueOf("83b4b8");
+    eikan = Color.valueOf("83b4b8"),
+    wraith = Color.valueOf("ff7070"),
+    artifact = Color.valueOf("9cf9b4");
 }

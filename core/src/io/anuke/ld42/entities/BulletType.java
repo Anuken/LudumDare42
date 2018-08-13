@@ -86,13 +86,56 @@ public class BulletType extends BaseBulletType<Bullet>{
             speed = 2f;
             lifetime = 200f;
             hiteffect = Fx.tentahit;
-            hiteffect = Fx.tentahit;
         }
 
         @Override
         public void draw(Bullet b){
             Lines.stroke(3f);
             Draw.color(Color.MAROON);
+            Draw.alpha(0.5f);
+            Fill.circle(b.x, b.y, 9f);
+            Draw.alpha(1f);
+
+            Fill.circle(b.x, b.y, 6);
+            Draw.reset();
+            Fill.circle(b.x, b.y, 3);
+        }
+    },
+
+    wraith = new BulletType(){
+        {
+            damage = 1;
+            speed = 1.6f;
+            lifetime = 200f;
+            hiteffect = Fx.tentahit;
+        }
+
+        @Override
+        public void draw(Bullet b){
+            Lines.stroke(3f);
+            Draw.color(Palette.wraith);
+            Draw.alpha(0.5f);
+            Fill.circle(b.x, b.y, 9f);
+            Draw.alpha(1f);
+
+            Fill.circle(b.x, b.y, 6);
+            Draw.reset();
+            Fill.circle(b.x, b.y, 3);
+        }
+    },
+
+    wraith2 = new BulletType(){
+        {
+            damage = 1;
+            speed = 1.6f;
+            lifetime = 200f;
+            hiteffect = Fx.tentahit;
+        }
+
+        @Override
+        public void draw(Bullet b){
+            Lines.stroke(3f);
+            Draw.colorl(0.2f);
             Draw.alpha(0.5f);
             Fill.circle(b.x, b.y, 9f);
             Draw.alpha(1f);

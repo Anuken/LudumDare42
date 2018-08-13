@@ -32,7 +32,6 @@ public class Player extends Spark{
 
     @Override
     public void onDeath(){
-        //Timers.run(0f, this::heal);
         control.reset();
     }
 
@@ -53,12 +52,30 @@ public class Player extends Spark{
 
     @Override
     public void draw(){
+        float px = x, py = y;
+        x = (int)x;
+        y = (int)y;
+
         if(shootTime < 0){
             Draw.grect(name() +
             (walktime > 0 ? "-walk-" + ((int) (walktime / 10f) % 2) : ""), x, y, !direction);
         }else{
             Draw.grect(name() +"-"+(walktime > 0 ? "walk" : "" )+"shoot-1", x, y, !direction);
         }
+        x = px;
+        y = py;
+    }
+
+    @Override
+    public void drawShadow(){
+        float px = x, py = y;
+        x = (int)x;
+        y = (int)y;
+
+        super.drawShadow();
+
+        x = px;
+        y = py;
     }
 
     @Override

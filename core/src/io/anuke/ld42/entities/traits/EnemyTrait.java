@@ -5,4 +5,5 @@ import io.anuke.ucore.entities.trait.HealthTrait;
 
 public interface EnemyTrait extends HealthTrait, Entity{
     boolean isActive();
+    void setActive(boolean active);
 }

@@ -6,77 +6,91 @@ filter: Nearest,Nearest
 repeat: none
 blank
   rotate: false
-  xy: 539, 56
+  xy: 709, 120
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 aysa
   rotate: false
-  xy: 265, 1
+  xy: 291, 1
   size: 18, 26
   orig: 18, 26
   offset: 0, 0
   index: -1
 aysa-walk-1
   rotate: false
-  xy: 265, 1
+  xy: 291, 1
   size: 18, 26
   orig: 18, 26
   offset: 0, 0
   index: -1
 aysa-walk-0
   rotate: false
-  xy: 285, 1
+  xy: 311, 1
   size: 18, 26
   orig: 18, 26
   offset: 0, 0
   index: -1
 char
   rotate: false
-  xy: 305, 1
+  xy: 331, 1
   size: 18, 26
   orig: 18, 26
   offset: 0, 0
   index: -1
 char-shoot-0
   rotate: false
-  xy: 379, 31
+  xy: 405, 31
   size: 18, 26
   orig: 18, 26
   offset: 0, 0
   index: -1
 char-shoot-1
   rotate: false
-  xy: 399, 31
+  xy: 425, 31
   size: 18, 26
   orig: 18, 26
   offset: 0, 0
   index: -1
 char-walk-0
   rotate: false
-  xy: 419, 31
+  xy: 445, 31
   size: 18, 26
   orig: 18, 26
   offset: 0, 0
   index: -1
 char-walk-1
   rotate: false
-  xy: 439, 31
+  xy: 465, 31
   size: 18, 26
   orig: 18, 26
   offset: 0, 0
   index: -1
 char-walkshoot-0
   rotate: false
-  xy: 459, 31
+  xy: 485, 31
   size: 18, 26
   orig: 18, 26
   offset: 0, 0
   index: -1
 char-walkshoot-1
   rotate: false
-  xy: 479, 31
+  xy: 505, 31
+  size: 18, 26
+  orig: 18, 26
+  offset: 0, 0
+  index: -1
+wraith
+  rotate: false
+  xy: 525, 31
+  size: 18, 26
+  orig: 18, 26
+  offset: 0, 0
+  index: -1
+wraith2
+  rotate: false
+  xy: 545, 31
   size: 18, 26
   orig: 18, 26
   offset: 0, 0
@@ -88,23 +102,30 @@ clear
   orig: 16, 16
   offset: 0, 0
   index: -1
+artifact
+  rotate: false
+  xy: 932, 215
+  size: 24, 40
+  orig: 24, 40
+  offset: 0, 0
+  index: -1
 cave-creature-mouth
   rotate: false
-  xy: 709, 175
+  xy: 709, 139
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
   index: -1
 cave-creature-teeth
   rotate: false
-  xy: 673, 121
+  xy: 727, 157
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
   index: -1
 error
   rotate: false
-  xy: 525, 45
+  xy: 565, 31
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
@@ -251,14 +272,14 @@ shadow10
   index: -1
 shadow12
   rotate: false
-  xy: 325, 1
+  xy: 351, 1
   size: 12, 7
   orig: 12, 7
   offset: 0, 0
   index: -1
 shadow14
   rotate: false
-  xy: 369, 1
+  xy: 111, 2
   size: 14, 8
   orig: 14, 8
   offset: 0, 0
@@ -279,7 +300,7 @@ shadow18
   index: -1
 shadow2
   rotate: false
-  xy: 111, 6
+  xy: 926, 209
   size: 6, 4
   orig: 6, 4
   offset: 0, 0
@@ -293,42 +314,42 @@ shadow20
   index: -1
 shadow22
   rotate: false
-  xy: 353, 11
+  xy: 565, 45
   size: 22, 12
   orig: 22, 12
   offset: 0, 0
   index: -1
 shadow24
   rotate: false
-  xy: 499, 45
+  xy: 265, 3
   size: 24, 12
   orig: 24, 12
   offset: 0, 0
   index: -1
 shadow26
   rotate: false
-  xy: 325, 10
+  xy: 351, 10
   size: 26, 13
   orig: 26, 13
   offset: 0, 0
   index: -1
 shadow4
   rotate: false
-  xy: 912, 201
+  xy: 589, 53
   size: 6, 4
   orig: 6, 4
   offset: 0, 0
   index: -1
 shadow6
   rotate: false
-  xy: 726, 186
+  xy: 912, 201
   size: 6, 4
   orig: 6, 4
   offset: 0, 0
   index: -1
 shadow8
   rotate: false
-  xy: 926, 209
+  xy: 405, 25
   size: 8, 4
   orig: 8, 4
   offset: 0, 0
@@ -377,7 +398,7 @@ shape-7
   index: -1
 darkness
   rotate: false
-  xy: 325, 25
+  xy: 351, 25
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
@@ -396,30 +417,72 @@ floor2
   orig: 16, 16
   offset: 0, 0
   index: -1
-rock
+floor_corrupt
   rotate: false
   xy: 673, 138
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
+floor_corrupt2
+  rotate: false
+  xy: 691, 156
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+floor_corrupt3
+  rotate: false
+  xy: 709, 174
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+ribcage
+  rotate: false
+  xy: 673, 120
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+rock
+  rotate: false
+  xy: 691, 138
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+rock2
+  rotate: false
+  xy: 709, 156
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+skull
+  rotate: false
+  xy: 727, 174
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 tile
   rotate: false
-  xy: 343, 25
+  xy: 369, 25
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 tile_vines
   rotate: false
-  xy: 361, 25
+  xy: 387, 25
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 trigger
   rotate: false
-  xy: 691, 156
+  xy: 691, 120
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -433,7 +496,7 @@ bar
   index: -1
 border
   rotate: false
-  xy: 499, 31
+  xy: 379, 11
   size: 12, 12
   split: 4, 4, 4, 4
   orig: 12, 12
@@ -441,7 +504,7 @@ border
   index: -1
 button
   rotate: false
-  xy: 958, 215
+  xy: 167, 12
   size: 24, 40
   split: 10, 10, 10, 8
   pad: 8, 8, 2, 2
@@ -450,7 +513,7 @@ button
   index: -1
 button-down
   rotate: false
-  xy: 932, 215
+  xy: 141, 12
   size: 24, 40
   split: 10, 10, 10, 8
   pad: 8, 8, 2, 2
@@ -459,7 +522,7 @@ button-down
   index: -1
 button-over
   rotate: false
-  xy: 141, 12
+  xy: 958, 215
   size: 24, 40
   split: 10, 10, 10, 8
   pad: 8, 8, 2, 2
@@ -468,14 +531,14 @@ button-over
   index: -1
 check-off
   rotate: false
-  xy: 265, 29
+  xy: 291, 29
   size: 28, 28
   orig: 28, 28
   offset: 0, 0
   index: -1
 check-on
   rotate: false
-  xy: 295, 29
+  xy: 321, 29
   size: 28, 28
   orig: 28, 28
   offset: 0, 0
@@ -505,7 +568,7 @@ default-select
   index: -1
 default-select-selection
   rotate: false
-  xy: 111, 1
+  xy: 365, 5
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -541,14 +604,14 @@ icon-close-over
   index: -1
 list-selection
   rotate: false
-  xy: 709, 156
+  xy: 1010, 216
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 menu-bg
   rotate: false
-  xy: 719, 172
+  xy: 415, 28
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -625,14 +688,14 @@ scroll-knob-vertical
   index: -1
 select-box-list-bg
   rotate: false
-  xy: 1010, 216
+  xy: 934, 212
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 window-bg
   rotate: false
-  xy: 1010, 216
+  xy: 934, 212
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -646,35 +709,35 @@ select-down
   index: -1
 select-up
   rotate: false
-  xy: 353, 1
+  xy: 379, 1
   size: 14, 8
   orig: 14, 8
   offset: 0, 0
   index: -1
 selection
   rotate: false
-  xy: 936, 212
+  xy: 589, 50
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator
   rotate: false
-  xy: 912, 198
+  xy: 597, 56
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 tree-over
   rotate: false
-  xy: 912, 198
+  xy: 597, 56
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator-menu
   rotate: false
-  xy: 920, 204
+  xy: 600, 58
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -723,14 +786,14 @@ slider-vertical
   index: -1
 splitpane
   rotate: false
-  xy: 690, 135
+  xy: 744, 171
   size: 8, 1
   orig: 8, 1
   offset: 0, 0
   index: -1
 splitpane-over
   rotate: false
-  xy: 339, 7
+  xy: 759, 189
   size: 8, 1
   orig: 8, 1
   offset: 0, 0
@@ -744,21 +807,21 @@ splitpane-vertical
   index: -1
 splitpane-vertical-over
   rotate: false
-  xy: 705, 146
+  xy: 393, 15
   size: 1, 8
   orig: 1, 8
   offset: 0, 0
   index: -1
 sub-menu
   rotate: false
-  xy: 709, 159
+  xy: 709, 123
   size: 8, 14
   orig: 8, 14
   offset: 0, 0
   index: -1
 textfield
   rotate: false
-  xy: 984, 215
+  xy: 265, 17
   size: 24, 40
   split: 10, 10, 10, 8
   orig: 24, 40
@@ -766,7 +829,7 @@ textfield
   index: -1
 textfield-over
   rotate: false
-  xy: 167, 12
+  xy: 984, 215
   size: 24, 40
   split: 10, 10, 10, 8
   orig: 24, 40
@@ -774,7 +837,7 @@ textfield-over
   index: -1
 tooltip-bg
   rotate: false
-  xy: 116, 1
+  xy: 579, 40
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -789,14 +852,14 @@ tree-minus
   index: -1
 tree-plus
   rotate: false
-  xy: 691, 138
+  xy: 745, 174
   size: 12, 16
   orig: 12, 16
   offset: 0, 0
   index: -1
 tree-selection
   rotate: false
-  xy: 379, 26
+  xy: 127, 7
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -804,7 +867,7 @@ tree-selection
   index: -1
 white
   rotate: false
-  xy: 513, 40
+  xy: 719, 134
   size: 3, 3
   orig: 3, 3
   offset: 0, 0

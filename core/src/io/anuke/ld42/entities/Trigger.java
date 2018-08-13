@@ -1,15 +1,18 @@
 package io.anuke.ld42.entities;
 
-import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.utils.Array;
+import io.anuke.ld42.ui.DialogEntry;
 
 public class Trigger{
     public final int pos;
     public final boolean x;
-    public final MapObject object;
+    public final Class<?> enemy;
+    public final Array<DialogEntry> dialog;
 
-    public Trigger(int pos, boolean x, MapObject object){
+    public Trigger(Class<?> enemy, int pos, boolean x, Array<DialogEntry> dialog){
+        this.enemy = enemy;
         this.pos = pos;
         this.x = x;
-        this.object = object;
+        this.dialog = dialog;
     }
 }

@@ -10,10 +10,10 @@ public enum Command{
             Effects.shake(10f, 50f, Vars.player);
         }
     },
-    wakeCaveBeast{
+    wake{
         @Override
         public void run(){
-            Timers.run(60f, () -> ((CaveCreature)Vars.enemy).shooting = true);
+            Timers.run(60f, () -> Vars.enemy.setActive(true));
         }
     };
     public float duration = 60f;

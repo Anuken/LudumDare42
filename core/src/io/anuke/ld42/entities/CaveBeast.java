@@ -1,10 +1,8 @@
 package io.anuke.ld42.entities;
 
 import com.badlogic.gdx.graphics.Color;
-import io.anuke.ld42.entities.traits.EnemyTrait;
 import io.anuke.ucore.core.Effects;
 import io.anuke.ucore.core.Timers;
-import io.anuke.ucore.entities.trait.SolidTrait;
 import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.graphics.Fill;
 import io.anuke.ucore.graphics.Lines;
@@ -16,7 +14,7 @@ import java.util.Arrays;
 import static io.anuke.ld42.Vars.control;
 import static io.anuke.ld42.Vars.player;
 
-public class CaveCreature extends Spark implements EnemyTrait{
+public class CaveBeast extends Enemy{
     private int segments = 10;
     private int tentacles = 6;
     private float len = 6f;
@@ -27,9 +25,7 @@ public class CaveCreature extends Spark implements EnemyTrait{
     private float[][] values;
     private float silenceTime;
 
-    public boolean shooting = false;
-
-    public CaveCreature(){
+    public CaveBeast(){
         hitbox.setSize(30f);
         height = 0f;
         initTentacles();
@@ -43,16 +39,6 @@ public class CaveCreature extends Spark implements EnemyTrait{
         for(int i = 0; i < tentacles; i++){
             Arrays.fill(values[i], (float)i / tentacles * 360f);
         }
-    }
-
-    @Override
-    public boolean collides(SolidTrait other){
-        return shooting && super.collides(other);
-    }
-
-    @Override
-    public boolean isActive(){
-        return shooting;
     }
 
     @Override
@@ -82,14 +68,13 @@ public class CaveCreature extends Spark implements EnemyTrait{
 
     @Override
     public String name(){
-        return "cave-creature";
+        return "cavebeast";
     }
 
     @Override
-    public void update(){
-        if(!shooting) return;
+    public void behavior(){
 
-        if(!phase2 && Timers.get(this, "shoot2", 220)){
+        if(!phase2 && Timers.get(this, "shoot2", 400)){
             for(int i = 0; i < 4; i++){
                 bullet(BulletType.tentacid, angleTo(player) + Mathf.range(20));
             }
@@ -157,7 +142,7 @@ public class CaveCreature extends Spark implements EnemyTrait{
 
             float lastx = x, lasty = y;
             float base = i / (float)tentacles * 360f;
-            //float len = CaveCreature.len + Mathf.randomSeed(i + 5, 0, 20);
+            //float len = CaveBeast.len + Mathf.randomSeed(i + 5, 0, 20);
             //float bthick = Mathf.randomSeed(i + 4, 0, 10)/4f;
 
             for(int j = 0; j < segments; j++){

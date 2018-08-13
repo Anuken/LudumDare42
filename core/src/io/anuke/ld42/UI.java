@@ -42,13 +42,14 @@ public class UI extends SceneModule{
 
         scene.table(table -> {
             float[] lastValue = {0};
-            float[] trns = {0};
             float[] hlerp = {0};
 
             table.bottom();
             table.table("button", t -> {
                 t.margin(8);
+                t.setTranslation(0, -60);
                 t.addRect((x, y, w, h) -> {
+                    if(enemy == null) return;
                     if(lastValue[0] != enemy.health()){
                         lastValue[0] = enemy.health();
                     }
@@ -59,8 +60,11 @@ public class UI extends SceneModule{
                     Draw.color(Color.SCARLET);
                     Draw.crect("bar", x, y, w * hlerp[0], h);
                 }).size(500, 30);
+            }).update(b -> {
+                boolean vis =  enemy != null && enemy.isActive() && !GameState.is(State.intro);
+                b.setTranslation(0, Mathf.lerp(b.getTranslation().y, vis ? 0 : -b.getHeight(), 0.1f));
             });
-        }).visible(() -> enemy != null && enemy.isActive() && !GameState.is(State.intro));
+        });
 
         dialog = new DialogBox();
 

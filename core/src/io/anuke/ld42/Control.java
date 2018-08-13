@@ -19,8 +19,10 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Sort;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 import io.anuke.ld42.GameState.State;
 import io.anuke.ld42.entities.*;
+import io.anuke.ld42.entities.traits.EnemyTrait;
 import io.anuke.ld42.entities.traits.LayerTrait;
 import io.anuke.ld42.entities.traits.LayerTrait.Layer;
 import io.anuke.ld42.entities.traits.ShadowTrait;
@@ -64,11 +66,12 @@ public class Control extends RendererModule{
     private float timeScale = 1f;
     private Color flashColor;
 
-    private RayHandler rays;
+    public RayHandler rays;
 	private PointLight light;
 
 	private Array<Trigger> triggers = new Array<>();
 	private ObjectMap<String, GridPoint2> markers = new ObjectMap<>();
+	private Class<?> lastEnemy;
 
 	public Control(){
 
@@ -121,10 +124,9 @@ public class Control extends RendererModule{
 		loadMap("map");
 
 		rays = new RayHandler();
-		rays.setAmbientLight(Hue.lightness(0.7f));
 
-		light = new PointLight(rays, 50);
-		light.setColor(Color.WHITE);
+		light = new PointLight(rays, raynum);
+		light.setColor(Color.valueOf("f8c79c"));
 		light.setDistance(100);
 		light.add(rays);
 	}
@@ -138,18 +140,26 @@ public class Control extends RendererModule{
 		Timers.run(1f, () -> {
 			flash(Color.SCARLET);
 			for(Entity entity : Entities.all()){
-				if(entity instanceof Bullet){
+				if(entity instanceof Bullet || entity instanceof EffectEntity){
 					entity.remove();
 				}
 			}
 			enemy.remove();
-			CaveCreature c = new CaveCreature();
-			c.set(enemy.getX(), enemy.getY());
-			c.add();
-			enemy = c;
-			player.set(markers.get("checkpoint").x * tileSize, markers.get("checkpoint").y * tileSize);
+
+			try{
+                String checkpoint = ClassReflection.getSimpleName(lastEnemy);
+			    EnemyTrait e = (EnemyTrait) lastEnemy.newInstance();
+			    e.set(markers.get(checkpoint).x * tileSize, markers.get(checkpoint).y * tileSize);
+			    e.add();
+			    enemy = e;
+			    Command.wake.run();
+            }catch(Exception e){
+			    throw new RuntimeException(e);
+            }
+			String checkpoint = "checkpoint_"+ClassReflection.getSimpleName(lastEnemy).toLowerCase();
+			player.set(markers.get(checkpoint).x * tileSize, markers.get(checkpoint).y * tileSize);
 			player.heal();
-			Command.wakeCaveBeast.run();
+			Command.wake.run();
 		});
 	    //TODO reset game state
 	}
@@ -166,30 +176,62 @@ public class Control extends RendererModule{
 			MapProperties props = obj.getProperties();
 			int x = (int)(((TiledMapTileMapObject)obj).getX()/tileSize);
 			int y = (int)((((TiledMapTileMapObject)obj).getY())/tileSize);
-			if(props.containsKey("type")){
-				triggers.add(new Trigger(!props.get("type").equals("x") ? x : y, props.get("type").equals("x"), obj));
-			}else{
-				markers.put(obj.getName(), new GridPoint2(x, y));
+
+			if(props.containsKey("type") && props.containsKey("text")){
+				Array<DialogEntry> entries = new Array<>();
+				String[] dialog = ((String)props.get("text")).split("\n");
+				for(String s : dialog){
+					if(s.startsWith(":")){
+						entries.add(new DialogEntry(Command.valueOf(s.substring(1))));
+						continue;
+					}
+					String facepic = s.substring(0, s.indexOf(':'));
+					String dname = Strings.capitalize(facepic.substring(0, facepic.indexOf(' ')));
+					String text = s.substring(s.indexOf(": ") + 3);
+					text = text.substring(0, text.length()-1);
+					entries.add(new DialogEntry(dname, facepic, text));
+				}
+
+				Class<?> enemyClass = null;
+				try{
+				    enemyClass = ClassReflection.forName("io.anuke.ld42.entities." + props.get("enemy"));
+                    EnemyTrait e = (EnemyTrait)enemyClass.newInstance();
+                }catch(Exception e){}
+
+				String type = (String) props.get("type");
+				if(type.equals("x")){
+					triggers.add(new Trigger(enemyClass, y, true, entries));
+				}else if(type.equals("y")){
+					triggers.add(new Trigger(enemyClass, x, false, entries));
+				}else{
+					//TODO
+				}
 			}
+
+			if(obj.getName() != null){
+                try{
+                    Class<?> enemyClass = ClassReflection.forName("io.anuke.ld42.entities." + obj.getName());
+                    EnemyTrait e = (EnemyTrait)enemyClass.newInstance();
+                    e.setActive(false);
+                    e.set(x * tileSize, y * tileSize);
+                    e.add();
+                }catch(Exception e){}
+			    markers.put(obj.getName(), new GridPoint2(x, y));
+            }
 		}
 
-		player.set(16, 48);
+		String start = (debug ? "startpoint_debug" : "startpoint");
+
+		player.set(markers.get(start).x * tileSize, markers.get(start).y * tileSize);
 
 		Aysa aysa = new Aysa();
 		aysa.set(player.x, player.y - 50);
 		aysa.add();
 
-		CaveCreature c = new CaveCreature();
-		c.set(markers.get("cavebeast").x * tileSize, markers.get("cavebeast").y * tileSize);
-		c.add();
-
-		enemy = c;
-
 		fbo = new FrameBuffer(Format.RGBA8888, wallLayer.getWidth(), wallLayer.getHeight(), false);
 		Core.batch.getProjectionMatrix().setToOrtho2D(0, 0, fbo.getWidth(), fbo.getHeight());
 		fbo.begin();
 		Graphics.begin();
-
 
 		Draw.color(Color.BLACK);
 		for(int x = 0; x < fbo.getWidth(); x++){
@@ -218,6 +260,8 @@ public class Control extends RendererModule{
 	public void update(){
 		light.setPosition(player.x, player.y);
 
+        rays.setAmbientLight(Hue.lightness(0.8f - player.y/3500f));
+
 		if(Inputs.keyTap("next")){
 			ui.dialog.next();
 		}
@@ -235,25 +279,17 @@ public class Control extends RendererModule{
 
         for(Trigger trigger : triggers){
 			if((!trigger.x && trigger.pos == px) || (trigger.x && trigger.pos == py)){
-				MapProperties props = trigger.object.getProperties();
-				if(props.containsKey("text")){
-					Array<DialogEntry> entries = new Array<>();
-					String[] dialog = ((String)props.get("text")).split("\n");
-					for(String s : dialog){
-						if(s.startsWith(":")){
-							entries.add(new DialogEntry(Command.valueOf(s.substring(1))));
-							continue;
-						}
-						String facepic = s.substring(0, s.indexOf(':'));
-						String name = Strings.capitalize(facepic.substring(0, facepic.indexOf(' ')));
-						String text = s.substring(s.indexOf(": ") + 3);
-						text = text.substring(0, text.length()-1);
-						entries.add(new DialogEntry(name, facepic, text));
-					}
-					ui.dialog.display(entries);
-				}else{
-					throw new RuntimeException("Invalid trigger.");
-				}
+			    if(trigger.enemy != null){
+			        lastEnemy = trigger.enemy;
+			        for(Entity e : Entities.all()){
+			            if(e.getClass() == trigger.enemy){
+			                enemy = (EnemyTrait) e;
+			                break;
+                        }
+                    }
+                    Command.wake.run();
+                }
+				if(!debug) ui.dialog.display(trigger.dialog);
 				triggers.removeValue(trigger, true);
 				break;
 			}
@@ -262,8 +298,6 @@ public class Control extends RendererModule{
         player.x = Mathf.clamp(player.x, tileSize*2f, tileSize * floorLayer.getWidth() - tileSize*2f);
 		player.y = Mathf.clamp(player.y, tileSize*3f, tileSize * floorLayer.getHeight() - tileSize*2f);
 
-		smoothCamera(player.x, player.y, 0.1f);
-		limitCamera(6f, player.x, player.y);
 		clampCamera(tileSize*2f, tileSize*3, tileSize * floorLayer.getWidth() - tileSize*2.5f, tileSize * floorLayer.getHeight() - tileSize*2f);
 		updateShake();
 
@@ -282,12 +316,22 @@ public class Control extends RendererModule{
 			}
 		}
 
+		smoothCamera((int)player.x, (int)player.y, 0.1f);
+		limitCamera(5f, (int)player.x, (int)player.y);
+
+		float pcx = Core.camera.position.x, pcy = Core.camera.position.y;
+		Core.camera.position.x = (int)Core.camera.position.x;
+		Core.camera.position.y = (int)Core.camera.position.y;
+
 		drawDefault();
 		if(drawLights){
 			rays.setCombinedMatrix(Core.camera);
 			rays.updateAndRender();
 		}
 		record();
+
+		Core.camera.position.x = pcx;
+		Core.camera.position.y = pcy;
 	}
 	
 	@Override
@@ -334,8 +378,8 @@ public class Control extends RendererModule{
 				Cell cell = wallLayer.getCell(worldx, worldy);
 				if(cell == null) continue;
 
-				if(cell.getTile().getProperties().containsKey("shadow")){
-					Draw.rect("shadow16", worldx * tileSize, worldy * tileSize+2);
+				if(!cell.getTile().getProperties().containsKey("solid")){
+					Draw.rect("shadow" + cell.getTile().getProperties().get("shadow", 16, Integer.class), worldx * tileSize, worldy * tileSize+2);
 				}else{
 
 					float t = tileSize / 2f;
@@ -422,7 +466,7 @@ public class Control extends RendererModule{
 		}
 
 		rays.resizeFBO(Gdx.graphics.getWidth()/Core.cameraScale, Gdx.graphics.getHeight()/Core.cameraScale);
-		rays.pixelate();
+		//rays.pixelate();
 	}
 
 	Layer getLayer(Entity entity){

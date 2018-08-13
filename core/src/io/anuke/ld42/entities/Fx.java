@@ -24,6 +24,12 @@ public class Fx{
 		Draw.reset();
 	}),
 
+	msmoke = new Effect(50, e -> {
+		Draw.color(Color.DARK_GRAY, Color.BLACK, e.fin());
+		Fill.circle(e.x, e.y, 4 * e.fslope());
+		Draw.reset();
+	}),
+
 	tentahit = new Effect(20, e -> {
 		Draw.color(Color.MAROON, Color.BLACK, e.fout());
 		Angles.randLenVectors(e.id, 10, e.fin() * 20f, (x, y) -> {
